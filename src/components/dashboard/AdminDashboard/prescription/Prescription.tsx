@@ -101,10 +101,14 @@ const Prescriptions = () => {
                     {prescription.appointment_id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Dr. {prescription.doctor_id}
+                    {prescription.doctor
+                      ? `Dr. ${prescription.doctor.first_name} ${prescription.doctor.last_name}`
+                      : "—"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Patient {prescription.patient_id}
+                    {prescription.patient
+                      ? `${prescription.patient.firstname} ${prescription.patient.lastname}`
+                      : "—"}
                   </td>
                   <td className="px-6 py-4 max-w-xs truncate text-sm text-gray-700">
                     {prescription.notes || "—"}

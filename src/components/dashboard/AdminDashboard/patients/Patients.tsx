@@ -13,6 +13,9 @@ const Patients = () => {
     pollingInterval: 60000,
   }) as { data?: TUser[]; isLoading: boolean; error?: any };
 
+  // Filter only patients (assuming role === "user" means patient)
+  const patients = data?.filter((u) => u.role === "user") || [];
+
   const [selectedUser, setSelectedUser] = useState<TUser | null>(null);
   const [userToDelete, setUserToDelete] = useState<TUser | null>(null);
 
@@ -49,7 +52,7 @@ const Patients = () => {
           <div className="bg-green-50 px-4 py-2 rounded-lg border border-green-100">
             <p className="text-xs text-green-500">Total Patients</p>
             <p className="text-xl font-bold text-green-700">
-              {data?.length || 0}
+              {patients.length}
             </p>
           </div>
         </div>
@@ -89,9 +92,9 @@ const Patients = () => {
       )}
 
       {/* User cards */}
-      {data?.length ? (
+      {patients.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.map((u) => (
+          {patients.map((u) => (
             <div
               key={u.id}
               className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 hover:border-green-200"
