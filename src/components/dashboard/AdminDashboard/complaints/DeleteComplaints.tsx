@@ -1,14 +1,18 @@
 import { toast } from "sonner";
-import { complaintsAPI, type TComplaint } from "../../../../Features/complaints/complaintsAPI";
+import {
+  complaintsAPI,
+  type TComplaintFull,
+} from "../../../../Features/complaints/complaintsAPI";
 
 type DeleteComplaintProps = {
-  complaint: TComplaint | null;
+  complaint: TComplaintFull | null;
 };
 
 const DeleteComplaint = ({ complaint }: DeleteComplaintProps) => {
-  const [deleteComplaint, { isLoading }] = complaintsAPI.useDeleteComplaintMutation({
-    fixedCacheKey: "deleteComplaint",
-  });
+  const [deleteComplaint, { isLoading }] =
+    complaintsAPI.useDeleteComplaintMutation({
+      fixedCacheKey: "deleteComplaint",
+    });
 
   const handleDelete = async () => {
     try {
@@ -20,7 +24,9 @@ const DeleteComplaint = ({ complaint }: DeleteComplaintProps) => {
       await deleteComplaint(complaint.complaint_id).unwrap();
       toast.success("Complaint deleted successfully!");
 
-      (document.getElementById("delete_complaint_modal") as HTMLDialogElement)?.close();
+      (
+        document.getElementById("delete_complaint_modal") as HTMLDialogElement
+      )?.close();
     } catch (error) {
       console.error("Error deleting complaint:", error);
       toast.error("Failed to delete complaint. Please try again.");
@@ -39,10 +45,15 @@ const DeleteComplaint = ({ complaint }: DeleteComplaintProps) => {
           ?
         </p>
         <div className="modal-action flex gap-4">
-          <button className="btn btn-error" onClick={handleDelete} disabled={isLoading}>
+          <button
+            className="btn btn-error"
+            onClick={handleDelete}
+            disabled={isLoading}
+          >
             {isLoading ? (
               <>
-                <span className="loading loading-spinner text-primary" /> Deleting...
+                <span className="loading loading-spinner text-primary" />{" "}
+                Deleting...
               </>
             ) : (
               "Yes, Delete"
@@ -52,7 +63,11 @@ const DeleteComplaint = ({ complaint }: DeleteComplaintProps) => {
             className="btn"
             type="button"
             onClick={() =>
-              (document.getElementById("delete_complaint_modal") as HTMLDialogElement)?.close()
+              (
+                document.getElementById(
+                  "delete_complaint_modal"
+                ) as HTMLDialogElement
+              )?.close()
             }
           >
             Cancel

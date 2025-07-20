@@ -1,6 +1,8 @@
+// src/components/dashboard/AdminDashboard/complaints/Complaints.tsx
+
 import {
   complaintsAPI,
-  type TComplaintFull,
+  type TComplaint,
 } from "../../../../Features/complaints/complaintsAPI";
 import { FaClipboardList, FaUserMd, FaUserInjured } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
@@ -9,33 +11,21 @@ import { useState } from "react";
 import { Skeleton } from "../../../../components/ui/skeleton";
 import DeleteComplaint from "../complaints/DeleteComplaints";
 
-// Helper to normalize (optional)
-const toFlat = (c: TComplaintFull): TComplaintFull => ({
-  complaint_id: c.complaint_id,
-  subject: c.subject,
-  description: c.description,
-  status: c.status,
-  created_at: c.created_at,
-  updated_at: c.updated_at,
-  user: c.user ?? null,
-  doctor: c.doctor ?? null,
-  appointment: c.appointment ?? null,
-});
-
 const Complaints = () => {
+  //  use the basic complaints query
   const {
     data: complaintsData,
     isLoading,
     error,
-  } = complaintsAPI.useGetComplaintsWithDetailsQuery(undefined, {
+  } = complaintsAPI.useGetComplaintsQuery(undefined, {
     refetchOnMountOrArgChange: true,
     pollingInterval: 60000,
   });
 
-  const [complaintToDelete, setComplaintToDelete] = useState<TComplaintFull | null>(null);
+  const [complaintToDelete, setComplaintToDelete] = useState<TComplaint | null>(null);
 
-  const handleDelete = (complaint: TComplaintFull) => {
-    setComplaintToDelete(toFlat(complaint));
+  const handleDelete = (complaint: TComplaint) => {
+    setComplaintToDelete(complaint);
     (document.getElementById("delete_complaint_modal") as HTMLDialogElement)?.showModal();
   };
 
@@ -80,7 +70,10 @@ const Complaints = () => {
       {isLoading && (
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="flex items-center p-4 bg-white rounded-xl border border-gray-200">
+            <div
+              key={i}
+              className="flex items-center p-4 bg-white rounded-xl border border-gray-200"
+            >
               <Skeleton className="h-10 w-10 rounded-full mr-4" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />
@@ -108,7 +101,9 @@ const Complaints = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Subject</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Subject
+                </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   <div className="flex items-center">
                     <FaUserInjured className="mr-2 text-blue-500" /> From Patient
@@ -119,25 +114,31 @@ const Complaints = () => {
                     <FaUserMd className="mr-2 text-blue-500" /> About Doctor
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {complaintsData.map((c: TComplaintFull) => (
+              {complaintsData.map((c: TComplaint) => (
                 <tr key={c.complaint_id} className="hover:bg-blue-50/50">
                   <td className="px-6 py-4 whitespace-normal max-w-xs">
                     <div className="text-sm font-medium text-gray-800">{c.subject}</div>
-                    {c.description && <div className="text-xs text-gray-500 mt-1">{c.description}</div>}
+                    {c.description && (
+                      <div className="text-xs text-gray-500 mt-1">{c.description}</div>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      {c.user?.full_name || `User #${c.user?.user_id ?? "—"}`}
+                      {c.patient_name || `User #${c.user_id}`}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      {c.doctor?.full_name || `Doctor #${c.doctor?.doctor_id ?? "—"}`}
+                      {c.doctor_name || `Doctor #${c.doctor_id}`}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -177,7 +178,9 @@ const Complaints = () => {
               <FaClipboardList size={96} className="opacity-20" />
             </div>
             <h3 className="mt-4 text-xl font-semibold text-gray-700">No complaints found</h3>
-            <p className="mt-2 text-gray-500 max-w-md mx-auto">There are no complaints in the system at this time</p>
+            <p className="mt-2 text-gray-500 max-w-md mx-auto">
+              There are no complaints in the system at this time
+            </p>
           </div>
         )
       )}

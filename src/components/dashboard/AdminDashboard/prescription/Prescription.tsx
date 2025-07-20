@@ -1,5 +1,4 @@
 // src/components/dashboard/AdminDashboard/prescriptions/Prescriptions.tsx
-
 import { prescriptionsAPI, type TPrescription } from "../../../../Features/prescriptions/prescriptionsAPI";
 import { FaEdit, FaClipboardList, FaUserMd } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
@@ -8,20 +7,15 @@ import UpdatePrescription from "./UpdatePrescription";
 import DeletePrescription from "./DeletePrescription";
 import { Skeleton } from "../../../../components/ui/skeleton";
 
-type PrescriptionsAPIResponse = {
-  data: TPrescription[];
-};
-
 const Prescriptions = () => {
   const {
-  data: prescriptionsData,
-  isLoading,
-  error,
-} = prescriptionsAPI.useGetPrescriptionsQuery(undefined, {
-  refetchOnMountOrArgChange: true,
-  pollingInterval: 60000,
-}) as { data?: PrescriptionsAPIResponse; isLoading: boolean; error?: any };
-
+    data: prescriptionsData,
+    isLoading,
+    error,
+  } = prescriptionsAPI.useGetPrescriptionsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 60000,
+  });
 
   const [selectedPrescription, setSelectedPrescription] = useState<TPrescription | null>(null);
   const [prescriptionToDelete, setPrescriptionToDelete] = useState<TPrescription | null>(null);
@@ -44,7 +38,7 @@ const Prescriptions = () => {
           Prescriptions Management
         </h2>
         <div className="text-sm text-gray-500">
-          {prescriptionsData?.data?.length || 0} prescriptions found
+          {prescriptionsData?.length || 0} prescriptions found
         </div>
       </div>
 
@@ -63,7 +57,7 @@ const Prescriptions = () => {
       )}
 
       {/* Table */}
-      {prescriptionsData?.data?.length ? (
+      {prescriptionsData && prescriptionsData.length > 0 ? (
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -95,7 +89,7 @@ const Prescriptions = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {prescriptionsData.data.map((prescription) => (
+              {prescriptionsData.map((prescription) => (
                 <tr
                   key={prescription.prescription_id}
                   className="hover:bg-gray-50 transition-colors"
@@ -116,13 +110,12 @@ const Prescriptions = () => {
                     {prescription.notes || "—"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-  <div className="text-sm font-medium text-gray-900">
-    {prescription.created_at
-      ? new Date(prescription.created_at).toLocaleDateString()
-      : "—"}
-  </div>
-</td>
-
+                    <div className="text-sm font-medium text-gray-900">
+                      {prescription.created_at
+                        ? new Date(prescription.created_at).toLocaleDateString()
+                        : "—"}
+                    </div>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex space-x-2">
                       <button
@@ -135,9 +128,7 @@ const Prescriptions = () => {
                       <button
                         onClick={() => {
                           setPrescriptionToDelete(prescription);
-                          (document.getElementById(
-                            "delete_prescription_modal"
-                          ) as HTMLDialogElement)?.showModal();
+                          (document.getElementById("delete_prescription_modal") as HTMLDialogElement)?.showModal();
                         }}
                         className="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors"
                         title="Delete prescription"

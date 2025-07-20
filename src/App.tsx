@@ -14,7 +14,10 @@ import AdminDashboard from "./components/dashboard/AdminDashboard/AdminDashboard
 import Appointments from "./components/dashboard/AdminDashboard/appointments/Appointments";
 import Doctors from "./components/dashboard/AdminDashboard/doctor/Doctor";
 import Complaints from "./components/dashboard/AdminDashboard/complaints/Complaints";
-import Prescriptions from "./components/dashboard/AdminDashboard/prescription/Prescription"; 
+import Prescriptions from "./components/dashboard/AdminDashboard/prescription/Prescription";
+// import Patients from "./components/dashboard/AdminDashboard/patients/Patients";
+import Payments from "./components/dashboard/AdminDashboard/payments/Payments"; 
+import Patients from "./components/dashboard/AdminDashboard/patients/Patients";
 
 function App() {
   return (
@@ -33,7 +36,9 @@ function App() {
           <Route path="/admin/appointments" element={<Appointments />} />
           <Route path="/admin/doctors" element={<Doctors />} />
           <Route path="/admin/complaints" element={<Complaints />} />
-          <Route path="/admin/prescriptions" element={<Prescriptions />} /> {/* ✅ added */}
+          <Route path="/admin/prescriptions" element={<Prescriptions />} />
+          <Route path="/admin/patients" element={<Patients />} />
+          <Route path="/admin/payments" element={<Payments />} /> 
         </Routes>
       </BrowserRouter>
 

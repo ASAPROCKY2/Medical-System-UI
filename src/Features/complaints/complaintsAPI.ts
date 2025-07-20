@@ -14,6 +14,8 @@ export type TComplaint = {
   status: "Open" | "In Progress" | "Resolved" | "Closed";
   created_at?: string;
   updated_at?: string;
+  patient_name?: string | null;
+  doctor_name?: string | null;
 };
 
 // Extended type for full details
