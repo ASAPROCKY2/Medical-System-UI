@@ -15,7 +15,7 @@ const Hero = () => {
       <div className="hero-content text-neutral-content text-center">
         <div className="max-w-2xl">
           <h1 className="mb-6 text-4xl md:text-6xl font-bold">
-            Smarter Hospital Management
+            Smarter Medical System Management
           </h1>
           <p className="mb-8 text-lg md:text-xl">
             Streamline patient records, appointments, and staff coordination in one secure platform.  

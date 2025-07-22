@@ -9,9 +9,10 @@ export type TDoctor = {
   last_name: string;
   specialization?: string | null;
   contact_phone?: string | null;
-  available_days?: string | null; // could be CSV or JSON
+  available_days?: string | null; 
   created_at?: string;
   updated_at?: string;
+  user_id: number; 
 };
 
 export const doctorsAPI = createApi({

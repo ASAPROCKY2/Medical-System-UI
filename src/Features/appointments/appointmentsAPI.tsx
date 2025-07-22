@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiDomain } from "../../utilis/APIDomain";
 import type { RootState } from "../../app/store";
 
-// ✅ Flat appointment type for create/update
+
 export type TAppointment = {
   appointment_id: number;
   user_id: number;
@@ -16,7 +16,7 @@ export type TAppointment = {
   updated_at?: string;
 };
 
-// ✅ Extended appointment type with full details (matches backend join)
+
 export type TAppointmentFull = {
   appointment_id: number;
   appointment_date: string;
@@ -26,7 +26,7 @@ export type TAppointmentFull = {
   created_at?: string;
   updated_at?: string;
 
-  // Patient info
+  
   user?: {
     user_id: number;
     firstname: string;
@@ -34,7 +34,7 @@ export type TAppointmentFull = {
     email?: string;
   } | null;
 
-  // Doctor info
+ 
   doctor?: {
     doctor_id: number;
     first_name: string;
@@ -42,7 +42,6 @@ export type TAppointmentFull = {
     specialization?: string;
   } | null;
 
-  // Optional joined data
   prescriptions?: {
     prescription_id: number;
     notes?: string;
@@ -70,32 +69,42 @@ export const appointmentsAPI = createApi({
   }),
   tagTypes: ["Appointments"],
   endpoints: (builder) => ({
-    //  Get all appointments with joined doctor/user
+    
     getAppointments: builder.query<TAppointmentFull[], void>({
       query: () => "/appointment",
-      transformResponse: (response: { data: TAppointmentFull[] }) => response.data,
+      transformResponse: (res: { data: TAppointmentFull[] }) => res.data,
       providesTags: ["Appointments"],
     }),
 
-    //  Get appointment by ID
+    
     getAppointmentById: builder.query<TAppointmentFull, number>({
       query: (id) => `/appointment/${id}`,
-      transformResponse: (response: { data: TAppointmentFull }) => response.data,
+      transformResponse: (res: { data: TAppointmentFull }) => res.data,
       providesTags: ["Appointments"],
     }),
 
-    //  Get by doctor
+    
     getAppointmentsByDoctor: builder.query<TAppointmentFull[], number>({
       query: (doctor_id) => `/appointment/doctor/${doctor_id}`,
-      transformResponse: (response: { data: TAppointmentFull[] }) => response.data,
+      transformResponse: (res: { data: TAppointmentFull[] }) => res.data,
       providesTags: ["Appointments"],
     }),
 
-    //  Get by user
+    
     getAppointmentsByUser: builder.query<TAppointmentFull[], number>({
       query: (user_id) => `/appointment/user/${user_id}`,
-      transformResponse: (response: { data: TAppointmentFull[] }) => response.data,
+      transformResponse: (res: { data: TAppointmentFull[] }) => res.data,
       providesTags: ["Appointments"],
+    }),
+
+    //  Create
+    createAppointment: builder.mutation<TAppointment, Partial<TAppointment>>({
+      query: (newAppointment) => ({
+        url: "/appointment",
+        method: "POST",
+        body: newAppointment,
+      }),
+      invalidatesTags: ["Appointments"],
     }),
 
     //  Update
@@ -111,7 +120,7 @@ export const appointmentsAPI = createApi({
       invalidatesTags: ["Appointments"],
     }),
 
-    //  Delete
+    // Delete
     deleteAppointment: builder.mutation<{ success: boolean; id: number }, number>({
       query: (appointment_id) => ({
         url: `/appointment/${appointment_id}`,
@@ -127,6 +136,7 @@ export const {
   useGetAppointmentByIdQuery,
   useGetAppointmentsByDoctorQuery,
   useGetAppointmentsByUserQuery,
+  useCreateAppointmentMutation,
   useUpdateAppointmentMutation,
   useDeleteAppointmentMutation,
 } = appointmentsAPI;

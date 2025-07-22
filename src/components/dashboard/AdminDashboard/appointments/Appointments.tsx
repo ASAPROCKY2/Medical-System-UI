@@ -14,6 +14,7 @@ import { RiCheckboxCircleFill, RiCloseCircleFill } from "react-icons/ri";
 import { useState } from "react";
 import UpdateAppointment from "./UpdateAppointments";
 import DeleteAppointment from "./DeleteAppointment";
+import CreateAppointment from "./CreateAppointments"; 
 import { Skeleton } from "../../../../components/ui/skeleton";
 
 const toFlat = (appt: any): TAppointment => ({
@@ -77,6 +78,7 @@ const Appointments = () => {
       {/* Modals */}
       <UpdateAppointment appointment={selectedAppointment} />
       <DeleteAppointment appointment={appointmentToDelete} />
+      <CreateAppointment /> {/* ✅ create appointment modal */}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
@@ -91,11 +93,23 @@ const Appointments = () => {
             Manage all patient appointments and schedules
           </p>
         </div>
-        <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <span className="font-medium text-blue-600">
-            {appointmentsData?.length || 0}
-          </span>
-          <span className="text-gray-500 ml-1">appointments</span>
+        <div className="flex items-center gap-4">
+          <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
+            <span className="font-medium text-blue-600">
+              {appointmentsData?.length || 0}
+            </span>
+            <span className="text-gray-500 ml-1">appointments</span>
+          </div>
+          <button
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={() =>
+              (document.getElementById(
+                "create_appointment_modal"
+              ) as HTMLDialogElement)?.showModal()
+            }
+          >
+            + Add Appointment
+          </button>
         </div>
       </div>
 
@@ -103,7 +117,10 @@ const Appointments = () => {
       {isLoading && (
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="flex items-center p-4 bg-white rounded-xl border border-gray-200">
+            <div
+              key={i}
+              className="flex items-center p-4 bg-white rounded-xl border border-gray-200"
+            >
               <Skeleton className="h-10 w-10 rounded-full mr-4" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />
@@ -169,10 +186,10 @@ const Appointments = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
                       {appt.appointment_date
-                        ? new Date(appt.appointment_date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
+                        ? new Date(appt.appointment_date).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
                           })
                         : "—"}
                     </div>

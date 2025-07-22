@@ -5,10 +5,11 @@ export type UserState = {
   token: string | null;
   user: {
     user_id: number;
-    first_name: string;
-    last_name: string;
+    firstname: string;
+    lastname: string;
     email: string;
     role: string;
+    doctor_id?: number | null; 
   } | null;
 };
 
@@ -27,10 +28,11 @@ const userSlice = createSlice({
         token: string;
         user: {
           user_id: number;
-          first_name: string;
-          last_name: string;
+          firstname: string;
+          lastname: string;
           email: string;
           role: string;
+          doctor_id?: number | null;
         };
       }>
     ) => {

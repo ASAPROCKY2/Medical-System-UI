@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 
 const Navbar = () => {
-  // Active link style
   const activeStyle = "bg-white/20 rounded-md font-bold";
 
   return (
@@ -19,7 +18,7 @@ const Navbar = () => {
             className="h-12 w-auto rounded-full border-2 border-white"
           />
           <div>
-            <h1 className="text-xl font-bold">Smarter Hospital</h1>
+            <h1 className="text-xl font-bold">Smarter Medical System</h1>
             <p className="text-xs opacity-80">Management System</p>
           </div>
         </NavLink>
@@ -54,7 +53,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink
-              to="/dashboard"
+              to="/admin"
               className={({ isActive }) =>
                 `px-4 py-2 hover:bg-white/10 transition-colors ${
                   isActive ? activeStyle : ""
@@ -81,9 +80,42 @@ const Navbar = () => {
         >
           Register
         </NavLink>
-        <button className="btn btn-sm bg-white text-teal-600 font-bold hover:bg-gray-100">
-          Profile
-        </button>
+
+        {/* Profile Dropdown */}
+        <div className="dropdown dropdown-end">
+          <label
+            tabIndex={0}
+            className="btn btn-circle avatar border-2 border-white hover:scale-105 transition-transform"
+          >
+            <div className="w-10 rounded-full overflow-hidden">
+              <img
+                src="https://i.pravatar.cc/100"
+                alt="User Avatar"
+              />
+            </div>
+          </label>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-teal-700 text-white rounded-box w-52"
+          >
+            <li>
+              <NavLink to="/profile" className="hover:bg-white/10 rounded-md">
+                My Profile
+              </NavLink>
+            </li>
+            <li>
+              <button
+                onClick={() => {
+                  console.log("Logging out...");
+                  // add logout logic here
+                }}
+                className="hover:bg-white/10 rounded-md text-left"
+              >
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -142,9 +174,42 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li>
-              <button className="btn btn-sm mt-2 bg-white text-teal-600 font-bold hover:bg-gray-100 w-full">
-                Profile
-              </button>
+              <div className="mt-2 flex justify-center">
+                <div className="dropdown dropdown-top">
+                  <label
+                    tabIndex={0}
+                    className="btn btn-circle avatar border-2 border-white hover:scale-105 transition-transform"
+                  >
+                    <div className="w-10 rounded-full overflow-hidden">
+                      <img
+                        src="https://i.pravatar.cc/100"
+                        alt="User Avatar"
+                      />
+                    </div>
+                  </label>
+                  <ul
+                    tabIndex={0}
+                    className="menu menu-sm dropdown-content mb-3 z-[1] p-2 shadow bg-teal-700 text-white rounded-box w-52"
+                  >
+                    <li>
+                      <NavLink
+                        to="/profile"
+                        className="hover:bg-white/10 rounded-md"
+                      >
+                        My Profile
+                      </NavLink>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => console.log("Logging out...")}
+                        className="hover:bg-white/10 rounded-md text-left"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </li>
           </ul>
         </div>

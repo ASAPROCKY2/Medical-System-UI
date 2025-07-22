@@ -1,11 +1,11 @@
-import { doctorsAPI } from "../../../../Features/doctor/doctorAPI";
-import { type TDoctor } from "../../../../Features/doctor/doctorAPI";
-import { FaUserMd, FaPhone, FaStethoscope } from "react-icons/fa";
+// src/components/dashboard/AdminDashboard/doctors/Doctors.tsx
+import { doctorsAPI, type TDoctor } from "../../../../Features/doctor/doctorAPI";
+import { FaUserMd, FaPhone, FaStethoscope, FaEdit, FaUserTie, FaIdCard } from "react-icons/fa";
 import { MdDeleteForever, MdEmail, MdOutlineWork } from "react-icons/md";
-import { FaEdit, FaUserTie, FaIdCard } from "react-icons/fa";
 import { useState } from "react";
 import UpdateDoctor from "./UpdateDoctor";
 import DeleteDoctor from "./DeleteDoctor";
+import CreateDoctor from "./CreateDoctor";
 import { Skeleton } from "../../../../components/ui/skeleton";
 
 type DoctorsAPIResponse = {
@@ -35,6 +35,7 @@ const Doctors = () => {
       {/* Modals */}
       <UpdateDoctor doctor={selectedDoctor} />
       <DeleteDoctor doctor={doctorToDelete} />
+      <CreateDoctor />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
@@ -56,6 +57,15 @@ const Doctors = () => {
               {doctorsData?.data?.length || 0}
             </p>
           </div>
+          {/* Button to open CreateDoctor modal */}
+          <button
+            onClick={() =>
+              (document.getElementById("create_doctor_modal") as HTMLDialogElement)?.showModal()
+            }
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Add Doctor
+          </button>
         </div>
       </div>
 
@@ -197,7 +207,12 @@ const Doctors = () => {
             <p className="mt-2 text-gray-500 max-w-md mx-auto">
               Your healthcare system currently has no doctors. Add new medical professionals to get started.
             </p>
-            <button className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <button
+              onClick={() =>
+                (document.getElementById("create_doctor_modal") as HTMLDialogElement)?.showModal()
+              }
+              className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
               Add First Doctor
             </button>
           </div>
