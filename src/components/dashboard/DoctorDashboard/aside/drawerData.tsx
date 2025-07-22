@@ -2,8 +2,7 @@
 import {
   FaChartLine,
   FaCalendarCheck,
-  FaClipboardList,
-  FaUserInjured,
+ 
   FaPrescriptionBottleAlt,
 } from "react-icons/fa";
 
@@ -28,22 +27,12 @@ export const doctorDrawerData: DrawerData[] = [
     icon: FaCalendarCheck,
     link: "/doctor/appointments",
   },
-  {
-    id: "patients",
-    name: "My Patients",
-    icon: FaUserInjured,
-    link: "/doctor/patients",
-  },
+ 
   {
     id: "prescriptions",
     name: "My Prescriptions",
     icon: FaPrescriptionBottleAlt,
     link: "/doctor/prescriptions",
   },
-  {
-    id: "complaints",
-    name: "Complaints",
-    icon: FaClipboardList,
-    link: "/doctor/complaints",
-  },
+ 
 ];

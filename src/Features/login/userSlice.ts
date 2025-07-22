@@ -9,7 +9,8 @@ export type UserState = {
     lastname: string;
     email: string;
     role: string;
-    doctor_id?: number | null; 
+    image_url?: string; 
+    doctor_id?: number | null;
   } | null;
 };
 
@@ -32,6 +33,7 @@ const userSlice = createSlice({
           lastname: string;
           email: string;
           role: string;
+          image_url?: string; 
           doctor_id?: number | null;
         };
       }>

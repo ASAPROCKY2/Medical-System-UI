@@ -14,7 +14,8 @@ import { RiCheckboxCircleFill, RiCloseCircleFill } from "react-icons/ri";
 import { useState } from "react";
 import UpdateAppointment from "./UpdateAppointments";
 import DeleteAppointment from "./DeleteAppointment";
-import CreateAppointment from "./CreateAppointments"; 
+import CreateAppointment from "./CreateAppointments";
+import CreatePayment from "../appointments/CreatePayments";
 import { Skeleton } from "../../../../components/ui/skeleton";
 
 const toFlat = (appt: any): TAppointment => ({
@@ -44,22 +45,23 @@ const Appointments = () => {
   const [appointmentToDelete, setAppointmentToDelete] =
     useState<TAppointment | null>(null);
 
+
+  const [paymentAppointmentId, setPaymentAppointmentId] = useState<number | null>(null);
+
   const handleEdit = (appointment: any) => {
     setSelectedAppointment(toFlat(appointment));
-    (
-      document.getElementById(
-        "update_appointment_modal"
-      ) as HTMLDialogElement
-    )?.showModal();
+    (document.getElementById("update_appointment_modal") as HTMLDialogElement)?.showModal();
   };
 
   const handleDelete = (appointment: any) => {
     setAppointmentToDelete(toFlat(appointment));
-    (
-      document.getElementById(
-        "delete_appointment_modal"
-      ) as HTMLDialogElement
-    )?.showModal();
+    (document.getElementById("delete_appointment_modal") as HTMLDialogElement)?.showModal();
+  };
+
+ 
+  const handleCreatePayment = (appointmentId: number) => {
+    setPaymentAppointmentId(appointmentId);
+    (document.getElementById("create_payment_modal") as HTMLDialogElement)?.showModal();
   };
 
   const getStatusIcon = (status: string) => {
@@ -75,10 +77,12 @@ const Appointments = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg">
-      {/* Modals */}
+     
+
       <UpdateAppointment appointment={selectedAppointment} />
       <DeleteAppointment appointment={appointmentToDelete} />
-      <CreateAppointment /> {/* ✅ create appointment modal */}
+      <CreateAppointment />
+      <CreatePayment appointmentId={paymentAppointmentId} /> 
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
@@ -103,9 +107,7 @@ const Appointments = () => {
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             onClick={() =>
-              (document.getElementById(
-                "create_appointment_modal"
-              ) as HTMLDialogElement)?.showModal()
+              (document.getElementById("create_appointment_modal") as HTMLDialogElement)?.showModal()
             }
           >
             + Add Appointment
@@ -113,7 +115,7 @@ const Appointments = () => {
         </div>
       </div>
 
-      {/* Loading or error states */}
+  
       {isLoading && (
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
@@ -140,7 +142,8 @@ const Appointments = () => {
         </div>
       )}
 
-      {/* Table */}
+  
+  
       {appointmentsData?.length ? (
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
@@ -247,6 +250,14 @@ const Appointments = () => {
                         title="Delete appointment"
                       >
                         <MdDeleteForever size={18} />
+                      </button>
+                      {/*  Create Payment button */}
+                      <button
+                        onClick={() => handleCreatePayment(appt.appointment_id)}
+                        className="p-2 text-green-600 hover:text-white hover:bg-green-600 rounded-lg border border-green-200 hover:border-green-600 transition-all"
+                        title="Create payment for this appointment"
+                      >
+                        <FaDollarSign size={16} />
                       </button>
                     </div>
                   </td>

@@ -1,6 +1,6 @@
+// src/components/dashboard/DoctorDashboard/appointments/DoctorAppointments.tsx
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../app/store";
-
 import { useState } from "react";
 import {
   appointmentsAPI,
@@ -8,41 +8,30 @@ import {
 } from "../../../../Features/appointments/appointmentsAPI";
 import { FaClipboardList, FaPrescriptionBottleAlt } from "react-icons/fa";
 import { Skeleton } from "../../../../components/ui/skeleton";
-import CreatePrescription from "../prescriptions/CreatePrescription";
+import CreatePrescription from "../appointments/CreatePrescrptions";
 
 const DoctorAppointments = () => {
-  // get logged-in doctor info from Redux
   const { user } = useSelector((state: RootState) => state.user);
   const doctorId = user?.doctor_id;
 
-  console.log("DoctorAppointments -> doctorId:", doctorId);
-
-  // state to track which appointment is selected for prescription
   const [selectedAppointment, setSelectedAppointment] =
     useState<TAppointmentFull | null>(null);
 
-  //  only run query if doctorId is defined and non‑zero
   const {
     data: appointmentsData,
     isLoading,
     error,
   } = appointmentsAPI.useGetAppointmentsByDoctorQuery(doctorId!, {
-    skip: doctorId === undefined || doctorId === null || doctorId === 0,
+    skip: !doctorId,
     refetchOnMountOrArgChange: true,
     pollingInterval: 60000,
   });
 
-  const openPrescriptionModal = (appointment: TAppointmentFull) => {
-    setSelectedAppointment({
-      ...appointment,
-      // add user_id for CreatePrescription (flattened)
-      user_id: appointment.user?.user_id ?? 0,
-      doctor_id: doctorId ?? 0,
-    } as any);
+  const openPrescriptionModal = (appt: TAppointmentFull) => {
+    setSelectedAppointment(appt);
     (document.getElementById("create_prescription_modal") as HTMLDialogElement)?.showModal();
   };
 
-  // If no doctorId is present, show a clear message
   if (!doctorId) {
     return (
       <div className="p-6 bg-white rounded-xl shadow-sm">
@@ -59,10 +48,11 @@ const DoctorAppointments = () => {
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm">
-      {/* Prescription Modal */}
+      {/* Modal for creating a prescription */}
       <CreatePrescription
-        appointment={selectedAppointment as any}
-        loggedInDoctorId={doctorId}
+        appointmentId={selectedAppointment?.appointment_id ?? null}
+        doctorId={doctorId}
+        patientId={selectedAppointment?.user_id ?? null}
       />
 
       {/* Header */}
@@ -120,25 +110,20 @@ const DoctorAppointments = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {appointmentsData.map((appt) => (
-                <tr
-                  key={appt.appointment_id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <tr key={appt.appointment_id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-900">
                     #{appt.appointment_id}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 text-sm text-gray-900">
                     {new Date(appt.appointment_date).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 text-sm text-gray-900">
                     {appt.time_slot}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {appt.user
-                      ? `${appt.user.firstname} ${appt.user.lastname}`
-                      : "—"}
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {appt.patient_name ?? "—"}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="px-6 py-4 text-sm">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         appt.appointment_status === "Completed"
@@ -151,10 +136,10 @@ const DoctorAppointments = () => {
                       {appt.appointment_status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-6 py-4 text-right text-sm font-medium">
                     <button
                       onClick={() => openPrescriptionModal(appt)}
-                      className="text-indigo-600 hover:text-indigo-900 p-2 rounded-lg hover:bg-indigo-50 transition-colors"
+                      className="text-indigo-600 hover:text-indigo-900 p-2 rounded-lg hover:bg-indigo-50"
                       title="Create Prescription"
                     >
                       <FaPrescriptionBottleAlt size={16} />

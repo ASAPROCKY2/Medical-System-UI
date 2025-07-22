@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiDomain } from "../../utilis/APIDomain";
 
-// ✅ Match the backend response and userSlice
+
 export type TLoginResponse = {
   token: string;
   user: {
@@ -10,7 +10,8 @@ export type TLoginResponse = {
     lastname: string;
     email: string;
     role: string;
-    doctor_id?: number | null; // optional because only doctors have this
+    doctor_id?: number | null;
+    image_url?: string | null;
   };
 };
 
