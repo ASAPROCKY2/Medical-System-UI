@@ -1,3 +1,4 @@
+// src/components/navbar/Navbar.tsx
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 
@@ -6,12 +7,9 @@ const Navbar = () => {
 
   return (
     <nav className="navbar bg-teal-600 text-white shadow-lg px-4 md:px-8 py-3">
-      {/* Left: Logo and Brand */}
+      {/* Left: Logo and Brand (navigation disabled) */}
       <div className="flex-1">
-        <NavLink
-          to="/"
-          className="flex items-center gap-3 hover:opacity-90 transition-opacity"
-        >
+        <div className="flex items-center gap-3 cursor-default select-none">
           <img
             src={logo}
             alt="Hospital Logo"
@@ -21,7 +19,7 @@ const Navbar = () => {
             <h1 className="text-xl font-bold">Smarter Medical System</h1>
             <p className="text-xs opacity-80">Management System</p>
           </div>
-        </NavLink>
+        </div>
       </div>
 
       {/* Center: Desktop Navigation */}
@@ -53,7 +51,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink
-              to="/admin"
+              to="/"
               className={({ isActive }) =>
                 `px-4 py-2 hover:bg-white/10 transition-colors ${
                   isActive ? activeStyle : ""

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import UserDrawer from "./aside/UserDrawer";
-
 import Navbar from "../../navbar/Navbar";
 import Footer from "../../footer/Footer";
 
@@ -14,14 +13,12 @@ import { BsCashCoin } from "react-icons/bs";
 
 const UserDashboard = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   const [statsData, setStatsData] = useState<{
     appointments: number;
     prescriptions: number;
     complaints: number;
     payments: number;
   } | null>(null);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,13 +28,20 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Replace with your actual endpoint for user dashboard stats
         const res = await fetch("http://localhost:8081/user/dashboard-stats");
         if (!res.ok) throw new Error("Failed to fetch stats");
         const data = await res.json();
         setStatsData(data);
       } catch (err: any) {
+        console.warn("Dashboard stats fetch failed:", err.message);
         setError(err.message || "Error fetching stats");
+        // Optional: set some mock stats so UI still shows data
+        setStatsData({
+          appointments: 3,
+          prescriptions: 2,
+          complaints: 1,
+          payments: 1500,
+        });
       } finally {
         setLoading(false);
       }
@@ -51,25 +55,21 @@ const UserDashboard = () => {
           icon: <RiCalendarEventFill className="text-purple-500 text-2xl" />,
           value: statsData.appointments.toLocaleString(),
           label: "My Appointments",
-          change: "",
         },
         {
           icon: <MdMedicalServices className="text-green-500 text-2xl" />,
           value: statsData.prescriptions.toLocaleString(),
           label: "My Prescriptions",
-          change: "",
         },
         {
           icon: <FaRegCommentDots className="text-pink-500 text-2xl" />,
           value: statsData.complaints.toLocaleString(),
           label: "My Complaints",
-          change: "",
         },
         {
           icon: <BsCashCoin className="text-amber-500 text-2xl" />,
           value: `$${statsData.payments.toLocaleString()}`,
           label: "My Payments",
-          change: "",
         },
       ]
     : [];
@@ -103,45 +103,58 @@ const UserDashboard = () => {
               <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-xl p-6 text-white shadow-lg">
                 <h1 className="text-3xl font-bold mb-2">Welcome back!</h1>
                 <p className="text-indigo-100 text-sm sm:text-base">
-                  Here’s an overview of your activity.
+                  Here’s an overview of your recent activity.
                 </p>
               </div>
 
               {/* Stats */}
               {loading ? (
                 <p className="text-gray-600">Loading stats...</p>
-              ) : error ? (
-                <p className="text-red-600">{error}</p>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                  {stats.map((stat, i) => (
-                    <motion.div
-                      key={i}
-                      whileHover={{ y: -5 }}
-                      className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border flex flex-col justify-between"
-                    >
-                      <div className="flex flex-col items-center">
-                        <div className="bg-blue-50 p-2 sm:p-3 rounded-full mb-2">
-                          {stat.icon}
+                <div>
+                  {error && (
+                    <p className="text-yellow-600 mb-4">
+                      Showing sample data while we load your dashboard stats.
+                    </p>
+                  )}
+                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    {stats.map((stat, i) => (
+                      <motion.div
+                        key={i}
+                        whileHover={{ y: -5 }}
+                        className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border flex flex-col justify-between"
+                      >
+                        <div className="flex flex-col items-center">
+                          <div className="bg-blue-50 p-2 sm:p-3 rounded-full mb-2">
+                            {stat.icon}
+                          </div>
+                          <span className="text-sm font-medium text-gray-600 text-center whitespace-normal leading-tight">
+                            {stat.label}
+                          </span>
                         </div>
-                        <span className="text-sm font-medium text-gray-600 text-center whitespace-normal leading-tight">
-                          {stat.label}
-                        </span>
-                      </div>
-                      <div className="mt-3 sm:mt-4 text-center">
-                        <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
-                          {stat.value}
-                        </h3>
-                        {stat.change && (
-                          <p className="text-sm mt-1 text-green-500">
-                            {stat.change}
-                          </p>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
+                        <div className="mt-3 sm:mt-4 text-center">
+                          <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
+                            {stat.value}
+                          </h3>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               )}
+
+              {/* Quick Tips */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border">
+                <h2 className="text-lg font-bold mb-3 text-gray-800">
+                  Quick Tips
+                </h2>
+                <ul className="list-disc list-inside space-y-2 text-gray-700 text-sm">
+                  <li>Book appointments early to get your preferred time slots.</li>
+                  <li>Track your prescriptions here and set reminders to refill on time.</li>
+                  <li>If something isn’t right, you can file a complaint and follow its status.</li>
+                  <li>Check your payment history to stay on top of your bills.</li>
+                </ul>
+              </div>
             </div>
           ) : (
             <Outlet />

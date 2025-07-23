@@ -1,18 +1,18 @@
 // src/components/dashboard/AdminDashboard/complaints/Complaints.tsx
-
 import {
   complaintsAPI,
   type TComplaint,
 } from "../../../../Features/complaints/complaintsAPI";
 import { FaClipboardList, FaUserMd, FaUserInjured } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { RiCheckboxCircleFill, RiCloseCircleFill } from "react-icons/ri";
 import { useState } from "react";
 import { Skeleton } from "../../../../components/ui/skeleton";
 import DeleteComplaint from "../complaints/DeleteComplaints";
+import UpdateComplaint from "../complaints/UpdateComplaint";
 
 const Complaints = () => {
-  //  use the basic complaints query
+  // fetch complaints
   const {
     data: complaintsData,
     isLoading,
@@ -23,10 +23,16 @@ const Complaints = () => {
   });
 
   const [complaintToDelete, setComplaintToDelete] = useState<TComplaint | null>(null);
+  const [complaintToUpdate, setComplaintToUpdate] = useState<TComplaint | null>(null);
 
   const handleDelete = (complaint: TComplaint) => {
     setComplaintToDelete(complaint);
     (document.getElementById("delete_complaint_modal") as HTMLDialogElement)?.showModal();
+  };
+
+  const handleUpdate = (complaint: TComplaint) => {
+    setComplaintToUpdate(complaint);
+    (document.getElementById("update_complaint_modal") as HTMLDialogElement)?.showModal();
   };
 
   const getStatusIcon = (status: string) => {
@@ -42,8 +48,9 @@ const Complaints = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg">
-      {/* Modal */}
+      {/* Modals */}
       <DeleteComplaint complaint={complaintToDelete} />
+      <UpdateComplaint complaint={complaintToUpdate} />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
@@ -157,7 +164,14 @@ const Complaints = () => {
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap flex gap-2">
+                    <button
+                      onClick={() => handleUpdate(c)}
+                      className="p-2 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg border border-blue-200 hover:border-blue-600 transition-all"
+                      title="Edit complaint"
+                    >
+                      <MdEdit size={18} />
+                    </button>
                     <button
                       onClick={() => handleDelete(c)}
                       className="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-lg border border-red-200 hover:border-red-600 transition-all"
