@@ -13,7 +13,7 @@ type LoginInputs = {
   password: string;
 };
 
-// ✅ Validation schema
+
 const schema = yup.object({
   email: yup
     .string()
@@ -52,11 +52,11 @@ function Login() {
     try {
       const response = await loginUser(data).unwrap();
 
-      // ✅ Map backend response fields to Redux shape
+     
       const mappedUser = {
         user_id: response.user.user_id,
-        firstname: response.user.firstname, // fixed
-        lastname: response.user.lastname,   // fixed
+        firstname: response.user.firstname, 
+        lastname: response.user.lastname,   
         email: response.user.email,
         role: response.user.role,
         doctor_id: response.user.doctor_id ?? null,
@@ -78,7 +78,7 @@ function Login() {
       } else if (role === 'doctor') {
         navigate('/doctor');
       } else if (role === 'user') {
-        navigate('/patient-dashboard');
+        navigate('/user');
       } else {
         navigate('/');
       }
