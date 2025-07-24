@@ -1,6 +1,8 @@
 // src/dashboard/UserDashboard/UserDashboard.tsx
 import { useState, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../app/store";
 import { motion } from "framer-motion";
 import UserDrawer from "./aside/UserDrawer";
 import Navbar from "../../navbar/Navbar";
@@ -22,32 +24,46 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // get token from redux (persisted by redux-persist)
+  const token = useSelector((state: RootState) => state.user.token);
+
   const location = useLocation();
   const isDefaultRoute = location.pathname === "/user";
 
   useEffect(() => {
     const fetchStats = async () => {
+      if (!token) {
+        setError("No auth token found. Please log in again.");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetch("http://localhost:8081/user/dashboard-stats");
-        if (!res.ok) throw new Error("Failed to fetch stats");
+        const res = await fetch("http://localhost:8081/user/dashboard-stats", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Backend error: ${errorText}`);
+        }
+
         const data = await res.json();
         setStatsData(data);
       } catch (err: any) {
-        console.warn("Dashboard stats fetch failed:", err.message);
+        console.error("Error fetching stats:", err);
         setError(err.message || "Error fetching stats");
-        // Optional: set some mock stats so UI still shows data
-        setStatsData({
-          appointments: 3,
-          prescriptions: 2,
-          complaints: 1,
-          payments: 1500,
-        });
       } finally {
         setLoading(false);
       }
     };
+
     fetchStats();
-  }, []);
+  }, [token]);
 
   const stats = statsData
     ? [
@@ -109,37 +125,32 @@ const UserDashboard = () => {
 
               {/* Stats */}
               {loading ? (
-                <p className="text-gray-600">Loading stats...</p>
+                <p className="text-gray-600">Loading stats…</p>
+              ) : error ? (
+                <p className="text-red-600">Failed to load stats: {error}</p>
               ) : (
-                <div>
-                  {error && (
-                    <p className="text-yellow-600 mb-4">
-                      Showing sample data while we load your dashboard stats.
-                    </p>
-                  )}
-                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                    {stats.map((stat, i) => (
-                      <motion.div
-                        key={i}
-                        whileHover={{ y: -5 }}
-                        className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border flex flex-col justify-between"
-                      >
-                        <div className="flex flex-col items-center">
-                          <div className="bg-blue-50 p-2 sm:p-3 rounded-full mb-2">
-                            {stat.icon}
-                          </div>
-                          <span className="text-sm font-medium text-gray-600 text-center whitespace-normal leading-tight">
-                            {stat.label}
-                          </span>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                  {stats.map((stat, i) => (
+                    <motion.div
+                      key={i}
+                      whileHover={{ y: -5 }}
+                      className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border flex flex-col justify-between"
+                    >
+                      <div className="flex flex-col items-center">
+                        <div className="bg-blue-50 p-2 sm:p-3 rounded-full mb-2">
+                          {stat.icon}
                         </div>
-                        <div className="mt-3 sm:mt-4 text-center">
-                          <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
-                            {stat.value}
-                          </h3>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
+                        <span className="text-sm font-medium text-gray-600 text-center whitespace-normal leading-tight">
+                          {stat.label}
+                        </span>
+                      </div>
+                      <div className="mt-3 sm:mt-4 text-center">
+                        <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
+                          {stat.value}
+                        </h3>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
               )}
 

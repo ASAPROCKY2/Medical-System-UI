@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
   [doctorsAPI.reducerPath]: doctorsAPI.reducer,
   [complaintsAPI.reducerPath]: complaintsAPI.reducer,
   [prescriptionsAPI.reducerPath]: prescriptionsAPI.reducer,
-  [paymentsAPI.reducerPath]: paymentsAPI.reducer, // ✅ added
+  [paymentsAPI.reducerPath]: paymentsAPI.reducer, 
   user: userReducer,
 });
 

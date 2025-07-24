@@ -5,7 +5,7 @@ import { useCreateAppointmentMutation } from "../../../../Features/appointments/
 
 type CreateAppointmentProps = {
   selectedDoctorId: number | null;
-  userId: number | null; // pass the logged‑in user id from your auth context or props
+  userId: number | null; 
 };
 
 const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps) => {
@@ -14,30 +14,15 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
   });
 
   const [formData, setFormData] = useState<{
-    user_id: string;
-    doctor_id: string;
     appointment_date: string;
     time_slot: string;
   }>({
-    user_id: "",
-    doctor_id: "",
     appointment_date: "",
     time_slot: "",
   });
 
-  // prefill doctor_id and user_id if props are provided
-  useEffect(() => {
-    if (selectedDoctorId) {
-      setFormData((prev) => ({ ...prev, doctor_id: String(selectedDoctorId) }));
-    }
-    if (userId) {
-      setFormData((prev) => ({ ...prev, user_id: String(userId) }));
-    }
-  }, [selectedDoctorId, userId]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -46,20 +31,23 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
   };
 
   const handleSubmit = async () => {
-    try {
-      if (
-        !formData.user_id ||
-        !formData.doctor_id ||
-        !formData.appointment_date ||
-        !formData.time_slot
-      ) {
-        toast.error("All fields are required.");
-        return;
-      }
+    
 
+    if (!userId || !selectedDoctorId) {
+      toast.error("Missing user or doctor information.");
+      return;
+    }
+
+  
+    if (!formData.appointment_date || !formData.time_slot) {
+      toast.error("All fields are required.");
+      return;
+    }
+
+    try {
       await createAppointment({
-        user_id: Number(formData.user_id),
-        doctor_id: Number(formData.doctor_id),
+        user_id: userId,
+        doctor_id: selectedDoctorId,
         appointment_date: formData.appointment_date,
         time_slot: formData.time_slot,
       }).unwrap();
@@ -67,9 +55,8 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
       toast.success("Appointment created successfully!");
       (document.getElementById("book_appointment_modal") as HTMLDialogElement)?.close();
 
+      // reset date/time
       setFormData({
-        user_id: userId ? String(userId) : "",
-        doctor_id: selectedDoctorId ? String(selectedDoctorId) : "",
         appointment_date: "",
         time_slot: "",
       });
@@ -83,6 +70,7 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
     <dialog id="book_appointment_modal" className="modal sm:modal-middle">
       <div className="modal-box bg-gray-600 text-white w-full max-w-xs sm:max-w-lg mx-auto rounded-lg">
         <h3 className="font-bold text-lg mb-4">Book Appointment</h3>
+
         <form
           className="flex flex-col gap-4"
           onSubmit={(e) => {
@@ -90,26 +78,7 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
             handleSubmit();
           }}
         >
-          <input
-            type="number"
-            name="user_id"
-            value={formData.user_id}
-            onChange={handleChange}
-            placeholder="Your User ID"
-            className="input input-bordered text-black"
-            required
-          />
-
-          <input
-            type="number"
-            name="doctor_id"
-            value={formData.doctor_id}
-            onChange={handleChange}
-            placeholder="Doctor ID"
-            className="input input-bordered text-black"
-            required
-          />
-
+          
           <input
             type="date"
             name="appointment_date"

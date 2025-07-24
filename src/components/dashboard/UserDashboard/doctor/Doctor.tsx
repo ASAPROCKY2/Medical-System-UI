@@ -1,56 +1,44 @@
-
-
+// src/components/dashboard/UserDashboard/doctors/UserDoctors.tsx
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../../app/store"; 
 import { doctorsAPI, type TDoctor } from "../../../../Features/doctor/doctorAPI";
 import { FaUserMd, FaPhone, FaStethoscope, FaUserTie, FaIdCard } from "react-icons/fa";
 import { MdEmail, MdOutlineWork } from "react-icons/md";
-
-
-
 import { Skeleton } from "../../../../components/ui/skeleton";
 import { useState } from "react";
-
-
-import CreateAppointment from "../doctor/CreateAppointments"; 
+import CreateAppointment from "../doctor/CreateAppointments";
 
 type DoctorsAPIResponse = {
   data: TDoctor[];
 };
 
 const UserDoctors = () => {
+  
+  const loggedInUserId = useSelector((state: RootState) => state.user.user?.user_id ?? null);
+
   const {
     data: doctorsData,
     isLoading,
     error,
   } = doctorsAPI.useGetDoctorsQuery(undefined, {
-
-
-
-
     refetchOnMountOrArgChange: true,
     pollingInterval: 60000,
-
-
   }) as { data?: DoctorsAPIResponse; isLoading: boolean; error?: any };
 
   const [selectedDoctor, setSelectedDoctor] = useState<TDoctor | null>(null);
 
   const handleBookAppointment = (doctor: TDoctor) => {
     setSelectedDoctor(doctor);
-
-
-
     (document.getElementById("book_appointment_modal") as HTMLDialogElement)?.showModal();
   };
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+      
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-
-
-
-
             <FaUserMd className="mr-3 text-blue-600 text-3xl" />
             <span className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
               Available Doctors
@@ -59,7 +47,6 @@ const UserDoctors = () => {
           <p className="text-sm text-gray-500 mt-1">
             Browse through all available doctors and book your appointment
           </p>
-
         </div>
         <div className="bg-blue-50 px-4 py-2 rounded-lg border border-blue-100">
           <p className="text-xs text-blue-500">Total Doctors</p>
@@ -69,12 +56,12 @@ const UserDoctors = () => {
         </div>
       </div>
 
+      
       {isLoading && (
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
             <div
               key={i}
-
               className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg"
             >
               <Skeleton className="h-12 w-12 rounded-full" />
@@ -87,13 +74,14 @@ const UserDoctors = () => {
         </div>
       )}
 
-
+      
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
           Failed to load doctors. Please try again later.
         </div>
       )}
 
+    
       {doctorsData?.data?.length ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {doctorsData.data.map((doc) => (
@@ -101,11 +89,6 @@ const UserDoctors = () => {
               key={doc.doctor_id}
               className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 hover:border-blue-200"
             >
-
-
-
-              
-              
               <div className="bg-gradient-to-r from-blue-50 to-gray-50 p-6 border-b border-gray-200">
                 <div className="flex items-center space-x-4">
                   <div className="bg-blue-100 p-3 rounded-full">
@@ -142,8 +125,6 @@ const UserDoctors = () => {
                     </p>
                   </div>
                 </div>
-
-                
 
                 <div className="flex items-start">
                   <MdOutlineWork className="text-gray-400 mt-1 mr-3 flex-shrink-0" />
@@ -185,10 +166,8 @@ const UserDoctors = () => {
         </div>
       ) : (
         !isLoading && (
-          
           <div className="text-center py-16">
             <FaUserMd size={128} className="opacity-20 mx-auto" />
-
             <h3 className="mt-6 text-xl font-medium text-gray-700">
               No doctors available
             </h3>
@@ -199,12 +178,10 @@ const UserDoctors = () => {
         )
       )}
 
-      
+     
       <CreateAppointment
         selectedDoctorId={selectedDoctor?.doctor_id || null}
-        userId={1} 
-
-
+        userId={loggedInUserId}
       />
     </div>
   );
