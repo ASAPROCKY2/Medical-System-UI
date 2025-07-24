@@ -3,23 +3,25 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiDomain } from "../../utilis/APIDomain";
 import type { RootState } from "../../app/store";
 
+// ✅ Add image_url here
 export type TDoctor = {
   doctor_id: number;
   first_name: string;
   last_name: string;
   specialization?: string | null;
   contact_phone?: string | null;
-  available_days?: string | null; 
+  available_days?: string | null;
   created_at?: string;
   updated_at?: string;
-  user_id: number; 
+  user_id: number;
   email?: string | null;
+  image_url?: string | null; // ✅ NEW FIELD
 };
 
 export const doctorsAPI = createApi({
   reducerPath: "doctorsAPI",
   baseQuery: fetchBaseQuery({
-    baseUrl: ApiDomain, // for example: "http://localhost:8081"
+    baseUrl: ApiDomain, // e.g. "http://localhost:8081"
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).user.token;
       if (token) {
@@ -48,7 +50,7 @@ export const doctorsAPI = createApi({
       query: (newDoctor) => ({
         url: "/doctor",
         method: "POST",
-        body: newDoctor,
+        body: newDoctor, // include image_url in newDoctor when calling
       }),
       invalidatesTags: ["Doctors"],
     }),
@@ -61,7 +63,7 @@ export const doctorsAPI = createApi({
       query: ({ doctor_id, ...updates }) => ({
         url: `/doctor/${doctor_id}`,
         method: "PUT",
-        body: updates,
+        body: updates, // include image_url in updates when calling
       }),
       invalidatesTags: ["Doctors"],
     }),

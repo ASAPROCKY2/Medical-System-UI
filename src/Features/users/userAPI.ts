@@ -2,7 +2,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiDomain } from "../../utilis/APIDomain";
 
-// Frontend-friendly user type
+
 export type TUser = {
   id: number;
   firstName: string;
@@ -16,7 +16,7 @@ export type TUser = {
   image_url?: string;
 };
 
-// Complaints details type for admin dashboard
+
 export type TComplaintDetail = {
   complaint_id: number;
   description: string;

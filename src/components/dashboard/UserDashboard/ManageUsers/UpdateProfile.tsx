@@ -10,7 +10,6 @@ import axios from "axios";
 type UpdateProfileInputs = {
   firstName: string;
   lastName: string;
-  image_url: string;
 };
 
 const schema = yup.object({
@@ -22,7 +21,6 @@ const schema = yup.object({
     .string()
     .max(50, "Max 50 characters")
     .required("Last name is required"),
-  image_url: yup.string().url("Invalid URL").required("Image URL is required"),
 });
 
 interface User {
@@ -56,7 +54,6 @@ const UpdateProfile = ({ user, refetch }: UpdateProfileProps) => {
     defaultValues: {
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
-      image_url: user?.image_url || "",
     },
   });
 
@@ -64,7 +61,6 @@ const UpdateProfile = ({ user, refetch }: UpdateProfileProps) => {
     if (user) {
       setValue("firstName", user.firstName || "");
       setValue("lastName", user.lastName || "");
-      setValue("image_url", user.image_url || "");
     } else {
       reset();
     }
@@ -79,13 +75,19 @@ const UpdateProfile = ({ user, refetch }: UpdateProfileProps) => {
 
   const onSubmit: SubmitHandler<UpdateProfileInputs> = async (data) => {
     try {
-      let image_url = data.image_url;
+      // set default image_url
+      let image_url =
+        user.image_url && user.image_url.trim() !== ""
+          ? user.image_url
+          : "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
+      // if a new image is uploaded, replace the default
       if (image) {
         setIsUploading(true);
         const formData = new FormData();
         formData.append("file", image);
-        formData.append("upload_preset", "medical system"); 
+        formData.append("upload_preset", "medical system");
+
         const response = await axios.post(
           "https://api.cloudinary.com/v1_1/dmxa7h4vt/image/upload",
           formData
@@ -100,13 +102,14 @@ const UpdateProfile = ({ user, refetch }: UpdateProfileProps) => {
         }
       }
 
-      await updateUser({
-  id: Number(user.id),
-  firstName: data.firstName,
-  lastName: data.lastName,
-  image_url,
-}).unwrap();
+      const payload = {
+        id: Number(user.id),
+        firstName: data.firstName,
+        lastName: data.lastName,
+        image_url, // always include an image URL
+      };
 
+      await updateUser(payload).unwrap();
 
       toast.success("Profile updated successfully!");
       if (refetch) refetch();
@@ -144,16 +147,7 @@ const UpdateProfile = ({ user, refetch }: UpdateProfileProps) => {
             <span className="text-sm text-red-700">{errors.lastName.message}</span>
           )}
 
-          <input
-            type="text"
-            {...register("image_url")}
-            placeholder="Image URL"
-            className="input rounded w-full p-2 focus:ring-2 focus:ring-blue-500 text-lg bg-white text-gray-800"
-          />
-          {errors.image_url && (
-            <span className="text-sm text-red-700">{errors.image_url.message}</span>
-          )}
-
+          {/* no image_url input */}
           <div className="flex flex-col gap-2">
             <label className="text-sm text-gray-300">Upload Image</label>
             <input
