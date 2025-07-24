@@ -1,6 +1,13 @@
 // src/components/dashboard/AdminDashboard/doctors/Doctors.tsx
 import { doctorsAPI, type TDoctor } from "../../../../Features/doctor/doctorAPI";
-import { FaUserMd, FaPhone, FaStethoscope, FaEdit, FaUserTie, FaIdCard } from "react-icons/fa";
+import {
+  FaUserMd,
+  FaPhone,
+  FaStethoscope,
+  FaEdit,
+  FaIdCard,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import { MdDeleteForever, MdEmail, MdOutlineWork } from "react-icons/md";
 import { useState } from "react";
 import UpdateDoctor from "./UpdateDoctor";
@@ -57,7 +64,6 @@ const Doctors = () => {
               {doctorsData?.data?.length || 0}
             </p>
           </div>
-          {/* Button to open CreateDoctor modal */}
           <button
             onClick={() =>
               (document.getElementById("create_doctor_modal") as HTMLDialogElement)?.showModal()
@@ -107,10 +113,19 @@ const Doctors = () => {
               key={doc.doctor_id}
               className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 hover:border-blue-200"
             >
+              {/* Card Header with Image */}
               <div className="bg-gradient-to-r from-blue-50 to-gray-50 p-6 border-b border-gray-200">
                 <div className="flex items-center space-x-4">
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <FaUserTie className="text-blue-600 text-xl" />
+                  <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-blue-300 flex-shrink-0">
+                    <img
+                      src={
+                        doc.image_url && doc.image_url.trim() !== ""
+                          ? doc.image_url
+                          : "/default-avatar.png"
+                      }
+                      alt={`Dr. ${doc.first_name} ${doc.last_name}`}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-800 text-lg">
@@ -125,6 +140,7 @@ const Doctors = () => {
                 </div>
               </div>
 
+              {/* Card Body */}
               <div className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-start">
@@ -141,6 +157,17 @@ const Doctors = () => {
                       <p className="text-xs text-gray-500">Specialization</p>
                       <p className="text-sm font-medium">
                         {doc.specialization || "Not specified"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ✅ New section for Available Days */}
+                  <div className="flex items-start">
+                    <FaCalendarAlt className="text-gray-400 mt-1 mr-3 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500">Available Days</p>
+                      <p className="text-sm font-medium">
+                        {doc.available_days || "Not specified"}
                       </p>
                     </div>
                   </div>
@@ -167,11 +194,14 @@ const Doctors = () => {
                     <MdEmail className="text-gray-400 mt-1 mr-3 flex-shrink-0" />
                     <div>
                       <p className="text-xs text-gray-500">Email</p>
-                      <p className="text-sm font-medium">Not provided</p>
+                      <p className="text-sm font-medium">
+                        {doc.email || "Not provided"}
+                      </p>
                     </div>
                   </div>
                 </div>
 
+                {/* Actions */}
                 <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end space-x-2">
                   <button
                     onClick={() => handleEdit(doc)}

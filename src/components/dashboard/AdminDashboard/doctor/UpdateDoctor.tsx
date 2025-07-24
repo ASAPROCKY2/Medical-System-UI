@@ -8,10 +8,9 @@ type UpdateDoctorProps = {
 };
 
 const UpdateDoctor = ({ doctor }: UpdateDoctorProps) => {
-  const [updateDoctor, { isLoading }] =
-    doctorsAPI.useUpdateDoctorMutation({
-      fixedCacheKey: "updateDoctor",
-    });
+  const [updateDoctor, { isLoading }] = doctorsAPI.useUpdateDoctorMutation({
+    fixedCacheKey: "updateDoctor",
+  });
 
   const [formData, setFormData] = useState<{
     first_name: string;
@@ -19,12 +18,14 @@ const UpdateDoctor = ({ doctor }: UpdateDoctorProps) => {
     specialization: string;
     contact_phone: string;
     available_days: string;
+    image_url: string;
   }>({
     first_name: "",
     last_name: "",
     specialization: "",
     contact_phone: "",
     available_days: "",
+    image_url: "",
   });
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const UpdateDoctor = ({ doctor }: UpdateDoctorProps) => {
         specialization: doctor.specialization || "",
         contact_phone: doctor.contact_phone || "",
         available_days: doctor.available_days || "",
+        image_url: doctor.image_url || "",
       });
     }
   }, [doctor]);
@@ -63,13 +65,12 @@ const UpdateDoctor = ({ doctor }: UpdateDoctorProps) => {
         specialization: formData.specialization || undefined,
         contact_phone: formData.contact_phone || undefined,
         available_days: formData.available_days || undefined,
+        image_url: formData.image_url || undefined,
       });
 
       toast.success("Doctor updated successfully!");
       (
-        document.getElementById(
-          "update_doctor_modal"
-        ) as HTMLDialogElement
+        document.getElementById("update_doctor_modal") as HTMLDialogElement
       )?.close();
     } catch (error) {
       console.error("Error updating doctor:", error);
@@ -126,6 +127,15 @@ const UpdateDoctor = ({ doctor }: UpdateDoctorProps) => {
             value={formData.available_days}
             onChange={handleChange}
           />
+
+          <input
+            name="image_url"
+            type="text"
+            placeholder="Image URL"
+            className="input input-bordered"
+            value={formData.image_url}
+            onChange={handleChange}
+          />
         </form>
 
         <div className="modal-action flex gap-4 mt-6">
@@ -146,11 +156,7 @@ const UpdateDoctor = ({ doctor }: UpdateDoctorProps) => {
             className="btn"
             type="button"
             onClick={() =>
-              (
-                document.getElementById(
-                  "update_doctor_modal"
-                ) as HTMLDialogElement
-              )?.close()
+              (document.getElementById("update_doctor_modal") as HTMLDialogElement)?.close()
             }
           >
             Cancel

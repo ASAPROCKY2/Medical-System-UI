@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiDomain } from "../../utilis/APIDomain";
 import type { RootState } from "../../app/store";
 
-// ✅ Add image_url here
+
 export type TDoctor = {
   doctor_id: number;
   first_name: string;
@@ -15,13 +15,13 @@ export type TDoctor = {
   updated_at?: string;
   user_id: number;
   email?: string | null;
-  image_url?: string | null; // ✅ NEW FIELD
+  image_url?: string | null; 
 };
 
 export const doctorsAPI = createApi({
   reducerPath: "doctorsAPI",
   baseQuery: fetchBaseQuery({
-    baseUrl: ApiDomain, // e.g. "http://localhost:8081"
+    baseUrl: ApiDomain, 
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).user.token;
       if (token) {
@@ -33,37 +33,42 @@ export const doctorsAPI = createApi({
   }),
   tagTypes: ["Doctors"],
   endpoints: (builder) => ({
-    // GET all doctors
+   
+
+
     getDoctors: builder.query<TDoctor[], void>({
       query: () => "/doctor",
       providesTags: ["Doctors"],
     }),
 
-    // GET doctor by ID
     getDoctorById: builder.query<TDoctor, number>({
       query: (doctor_id) => `/doctor/${doctor_id}`,
       providesTags: ["Doctors"],
     }),
 
-    // CREATE doctor
+    
     createDoctor: builder.mutation<TDoctor, Partial<TDoctor>>({
       query: (newDoctor) => ({
         url: "/doctor",
         method: "POST",
-        body: newDoctor, // include image_url in newDoctor when calling
+        body: newDoctor, 
+        
       }),
       invalidatesTags: ["Doctors"],
     }),
 
-    // UPDATE doctor
+   
     updateDoctor: builder.mutation<
       TDoctor,
       Partial<TDoctor> & { doctor_id: number }
     >({
+
       query: ({ doctor_id, ...updates }) => ({
         url: `/doctor/${doctor_id}`,
         method: "PUT",
-        body: updates, // include image_url in updates when calling
+        body: updates, 
+
+
       }),
       invalidatesTags: ["Doctors"],
     }),

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import AdminDrawer from "./aside/AdminDrawer";
-
 import Navbar from "../../navbar/Navbar";
 import Footer from "../../footer/Footer";
 
@@ -48,40 +47,40 @@ const AdminDashboard = () => {
   const stats = statsData
     ? [
         {
-          icon: <MdPeopleAlt className="text-blue-500 text-2xl" />,
+          icon: <MdPeopleAlt className="text-white text-2xl" />,
           value: statsData.patients.toLocaleString(),
           label: "Patients",
-          change: "+12%",
+          bgColor: "bg-gradient-to-br from-blue-500 to-blue-600",
         },
         {
-          icon: <MdMedicalServices className="text-green-500 text-2xl" />,
+          icon: <MdMedicalServices className="text-white text-2xl" />,
           value: statsData.doctors.toLocaleString(),
           label: "Doctors",
-          change: "+3",
+          bgColor: "bg-gradient-to-br from-green-500 to-green-600",
         },
         {
-          icon: <RiCalendarEventFill className="text-purple-500 text-2xl" />,
+          icon: <RiCalendarEventFill className="text-white text-2xl" />,
           value: statsData.appointments.toLocaleString(),
           label: "Appointments",
-          change: "Today",
+          bgColor: "bg-gradient-to-br from-purple-500 to-purple-600",
         },
         {
-          icon: <BsCashCoin className="text-amber-500 text-2xl" />,
+          icon: <BsCashCoin className="text-white text-2xl" />,
           value: `$${statsData.revenue.toLocaleString()}`,
           label: "Revenue",
-          change: "+8.2%",
+          bgColor: "bg-gradient-to-br from-amber-500 to-amber-600",
         },
         {
-          icon: <FaRegCommentDots className="text-pink-500 text-2xl" />,
+          icon: <FaRegCommentDots className="text-white text-2xl" />,
           value: statsData.complaints.toLocaleString(),
           label: "Complaints",
-          change: "",
+          bgColor: "bg-gradient-to-br from-pink-500 to-pink-600",
         },
         {
-          icon: <FaClipboardList className="text-indigo-500 text-2xl" />,
+          icon: <FaClipboardList className="text-white text-2xl" />,
           value: statsData.prescriptions.toLocaleString(),
           label: "Prescriptions",
-          change: "",
+          bgColor: "bg-gradient-to-br from-indigo-500 to-indigo-600",
         },
       ]
     : [];
@@ -125,32 +124,19 @@ const AdminDashboard = () => {
                   {stats.map((stat, i) => (
                     <motion.div
                       key={i}
-                      whileHover={{ y: -5 }}
-                      className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border flex flex-col justify-between"
+                      whileHover={{ y: -5, scale: 1.03 }}
+                      className={`${stat.bgColor} p-4 sm:p-5 rounded-xl shadow-md text-white flex flex-col justify-between transition-transform duration-300`}
                     >
                       <div className="flex flex-col items-center">
-                        <div className="bg-blue-50 p-2 sm:p-3 rounded-full mb-2">
+                        <div className="bg-white/20 p-3 rounded-full mb-2 shadow-inner">
                           {stat.icon}
                         </div>
-                        <span className="text-sm font-medium text-gray-600 text-center whitespace-normal leading-tight">
+                        <span className="text-sm font-medium text-center whitespace-normal leading-tight">
                           {stat.label}
                         </span>
                       </div>
                       <div className="mt-3 sm:mt-4 text-center">
-                        <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
-                          {stat.value}
-                        </h3>
-                        {stat.change && (
-                          <p
-                            className={`text-sm mt-1 ${
-                              stat.change.includes("+")
-                                ? "text-green-500"
-                                : "text-blue-500"
-                            }`}
-                          >
-                            {stat.change}
-                          </p>
-                        )}
+                        <h3 className="text-xl sm:text-2xl font-bold">{stat.value}</h3>
                       </div>
                     </motion.div>
                   ))}
