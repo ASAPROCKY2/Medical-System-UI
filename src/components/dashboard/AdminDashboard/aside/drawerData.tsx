@@ -6,17 +6,17 @@ import {
   FaMoneyBillWave,
   FaClipboardList,
   FaChartLine,
-  FaPrescriptionBottleAlt, // prescription icon
+  FaPrescriptionBottleAlt,
+  FaChartBar, // ✅ added for Analytics
 } from "react-icons/fa";
 
 export type DrawerData = {
   id: string;
   name: string;
   icon: React.ComponentType<{ size?: number }>;
-  link: string; // route to navigate when clicked
+  link: string;
 };
 
-// actual list of admin drawer items
 export const adminDrawerData: DrawerData[] = [
   {
     id: "dashboard",
@@ -59,5 +59,13 @@ export const adminDrawerData: DrawerData[] = [
     name: "Prescriptions",
     icon: FaPrescriptionBottleAlt,
     link: "/admin/prescriptions",
+  },
+ 
+  
+  {
+    id: "analytics",
+    name: "Analytics",
+    icon: FaChartBar,
+    link: "/admin/analytics",
   },
 ];

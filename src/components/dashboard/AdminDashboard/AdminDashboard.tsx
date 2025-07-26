@@ -9,6 +9,8 @@ import { MdPeopleAlt, MdMedicalServices } from "react-icons/md";
 import { RiCalendarEventFill } from "react-icons/ri";
 import { BsCashCoin } from "react-icons/bs";
 import { FaRegCommentDots, FaClipboardList, FaHeartbeat } from "react-icons/fa";
+import { TbChecklist, TbShieldCheck } from "react-icons/tb";
+import { IoIosBulb } from "react-icons/io";
 
 const AdminDashboard = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -24,8 +26,8 @@ const AdminDashboard = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [currentTime, setCurrentTime] = useState(new Date());
+
   const location = useLocation();
   const isDefaultRoute = location.pathname === "/admin";
 
@@ -98,6 +100,28 @@ const AdminDashboard = () => {
       ]
     : [];
 
+  // Simple static info cards
+  const infoCards = [
+    {
+      icon: <TbChecklist className="text-green-600 text-2xl" />,
+      title: "Pending Tasks",
+      description: "Review new complaints and check recent prescriptions.",
+      bg: "bg-green-50",
+    },
+    {
+      icon: <TbShieldCheck className="text-blue-600 text-2xl" />,
+      title: "System Health",
+      description: "All systems running smoothly. No issues reported.",
+      bg: "bg-blue-50",
+    },
+    {
+      icon: <IoIosBulb className="text-amber-500 text-2xl" />,
+      title: "Reminder",
+      description: "Schedule your weekly team meeting before Friday.",
+      bg: "bg-amber-50",
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />
@@ -121,8 +145,8 @@ const AdminDashboard = () => {
 
         <main className="flex-1 p-6 lg:ml-64">
           {isDefaultRoute ? (
-            <div className="space-y-8">
-              {/* Greeting banner like DoctorDashboard */}
+            <div className="space-y-6">
+              {/* Greeting Banner */}
               <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
                 <div className="absolute right-6 top-6 opacity-20">
                   <FaHeartbeat className="text-white text-8xl" />
@@ -131,7 +155,7 @@ const AdminDashboard = () => {
                   <h1 className="text-3xl font-bold mb-1">
                     {greeting()}, Admin!
                   </h1>
-                  <p className="text-blue-100 text-lg mb-4">
+                  <p className="text-blue-100 text-lg mb-2">
                     {currentTime.toLocaleDateString(undefined, {
                       weekday: "long",
                       month: "long",
@@ -145,32 +169,53 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Stats cards */}
+              {/* Stats Cards */}
               {loading ? (
                 <p className="text-gray-600">Loading stats...</p>
               ) : error ? (
                 <p className="text-red-600">{error}</p>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                   {stats.map((stat, i) => (
                     <motion.div
                       key={i}
                       whileHover={{ y: -5, scale: 1.02 }}
-                      className={`${stat.bgColor} p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center transition-all`}
+                      className={`${stat.bgColor} p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center transition-all`}
                     >
-                      <div className="p-3 rounded-full bg-white shadow-xs mb-3">
+                      <div className="p-3 rounded-full bg-white shadow-xs mb-2">
                         {stat.icon}
                       </div>
                       <span className="text-sm font-medium text-gray-600 text-center">
                         {stat.label}
                       </span>
-                      <h3 className="mt-2 text-xl font-bold text-gray-800">
+                      <h3 className="mt-1 text-xl font-bold text-gray-800">
                         {stat.value}
                       </h3>
                     </motion.div>
                   ))}
                 </div>
               )}
+
+              {/* Static Info Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {infoCards.map((card, i) => (
+                  <motion.div
+                    key={i}
+                    whileHover={{ y: -3 }}
+                    className={`${card.bg} p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col transition-all`}
+                  >
+                    <div className="flex items-center mb-2">
+                      <div className="p-3 rounded-full bg-white shadow-xs mr-3">
+                        {card.icon}
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {card.title}
+                      </h3>
+                    </div>
+                    <p className="text-sm text-gray-700">{card.description}</p>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           ) : (
             <Outlet />

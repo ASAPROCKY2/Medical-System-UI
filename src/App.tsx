@@ -17,18 +17,20 @@ import Complaints from "./components/dashboard/AdminDashboard/complaints/Complai
 import Prescriptions from "./components/dashboard/AdminDashboard/prescription/Prescription";
 import Patients from "./components/dashboard/AdminDashboard/patients/Patients";
 import Payments from "./components/dashboard/AdminDashboard/payments/Payments";
+import Analytics from "./components/dashboard/AdminDashboard/analytics/Analytics";
 
+// ===== Doctor dashboard and pages =====
 import DoctorDashboard from "./components/dashboard/DoctorDashboard/DoctorDashboard";
 import DoctorAppointments from "./components/dashboard/DoctorDashboard/appointments/Appointments";
 import DoctorPrescriptions from "./components/dashboard/DoctorDashboard/prescriptions/Prescriptions";
 
+// ===== User dashboard and pages =====
 import UserDashboard from "./components/dashboard/UserDashboard/UserDashboard";
 import UserDoctors from "./components/dashboard/UserDashboard/doctor/Doctor";
 import UserAppointments from "./components/dashboard/UserDashboard/appointments/Appointments";
 import UserComplaints from "./components/dashboard/UserDashboard/complaints/Complaints";
-
-
 import UserPrescriptions from "./components/dashboard/UserDashboard/prescriptions/Prescriptions";
+import UserPayments from "./components/dashboard/UserDashboard/payments/Payments"; // ✅ NEW
 
 function App() {
   return (
@@ -51,6 +53,7 @@ function App() {
           <Route path="/admin/prescriptions" element={<Prescriptions />} />
           <Route path="/admin/patients" element={<Patients />} />
           <Route path="/admin/payments" element={<Payments />} />
+          <Route path="/admin/analytics" element={<Analytics />} />
 
           {/* ===== DOCTOR ROUTES ===== */}
           <Route path="/doctor" element={<DoctorDashboard />} />
@@ -63,8 +66,8 @@ function App() {
           <Route path="/user/doctors" element={<UserDoctors />} />
           <Route path="/user/appointments" element={<UserAppointments />} />
           <Route path="/user/complaints" element={<UserComplaints />} />
-
           <Route path="/user/prescriptions" element={<UserPrescriptions />} />
+          <Route path="/user/payments" element={<UserPayments />} /> 
         </Routes>
       </BrowserRouter>
 

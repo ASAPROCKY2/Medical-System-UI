@@ -10,6 +10,9 @@ import { Skeleton } from "../../../../components/ui/skeleton";
 import CancelAppointment from "./DeleteAppointments";
 import CreateComplaint from "../appointments/CreateComplaint";
 
+// ✅ backend base URL
+const API_BASE_URL = "http://localhost:8081";
+
 const UserAppointments = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const userId = user?.user_id;
@@ -17,6 +20,13 @@ const UserAppointments = () => {
   const [selectedAppointment, setSelectedAppointment] =
     useState<TAppointmentFull | null>(null);
 
+  // Pay modal states
+  const [payAppointment, setPayAppointment] = useState<TAppointmentFull | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [payLoading, setPayLoading] = useState(false);
+  const [payMessage, setPayMessage] = useState("");
+
+  // fetch appointments for this user
   const {
     data: appointmentsData,
     isLoading,
@@ -27,16 +37,63 @@ const UserAppointments = () => {
     pollingInterval: 60000,
   });
 
-  // open cancel modal
+  // cancel modal
   const openCancelModal = (appt: TAppointmentFull) => {
     setSelectedAppointment(appt);
     (document.getElementById("cancel_appointment_modal") as HTMLDialogElement)?.showModal();
   };
 
-  // open complaint modal
+  // complaint modal
   const openComplaintModal = (appt: TAppointmentFull) => {
     setSelectedAppointment(appt);
     (document.getElementById("create_complaint_modal") as HTMLDialogElement)?.showModal();
+  };
+
+  // pay modal
+  const openPayModal = (appt: TAppointmentFull) => {
+    setPayAppointment(appt);
+    setPhoneNumber("");
+    setPayMessage("");
+    (document.getElementById("pay_modal") as HTMLDialogElement)?.showModal();
+  };
+
+  // ✅ handle pay (fixed URL)
+  const handlePay = async () => {
+    if (!payAppointment || !phoneNumber.trim()) {
+      setPayMessage("Please enter your M-Pesa phone number.");
+      return;
+    }
+
+    setPayLoading(true);
+    setPayMessage("");
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/payments/initiate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          appointment_id: payAppointment.appointment_id,
+          user_id: userId,
+          phoneNumber: phoneNumber.trim(),
+          amount: payAppointment.total_amount, // use total_amount directly
+        }),
+      });
+
+      const text = await res.text(); // first get raw response
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error("Invalid JSON response from server");
+      }
+
+      if (!res.ok) throw new Error(data.error || "Failed to initiate payment.");
+      setPayMessage(`✅ ${data.CustomerMessage || "STK Push sent. Check your phone."}`);
+    } catch (err: any) {
+      setPayMessage(`❌ ${err.message}`);
+    } finally {
+      setPayLoading(false);
+    }
   };
 
   if (!userId) {
@@ -62,6 +119,42 @@ const UserAppointments = () => {
         doctorId={selectedAppointment?.doctor_id ?? 0}
         appointmentId={selectedAppointment?.appointment_id ?? 0}
       />
+
+      {/* Pay Modal */}
+      <dialog id="pay_modal" className="modal">
+        <form method="dialog" className="modal-box space-y-4">
+          <h3 className="font-bold text-lg">
+            Pay Appointment #{payAppointment?.appointment_id}
+          </h3>
+          <p className="text-gray-600">
+            Amount: KES {payAppointment?.total_amount ?? "0.00"}
+          </p>
+
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            placeholder="Enter M-Pesa phone number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+
+          {payMessage && <p className="text-sm">{payMessage}</p>}
+
+          <div className="modal-action">
+            <button className="btn" disabled={payLoading}>
+              Close
+            </button>
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={handlePay}
+              disabled={payLoading}
+            >
+              {payLoading ? "Processing…" : "Pay Now"}
+            </button>
+          </div>
+        </form>
+      </dialog>
 
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
@@ -109,6 +202,9 @@ const UserAppointments = () => {
                   Doctor
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Amount (KES)
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -125,9 +221,14 @@ const UserAppointments = () => {
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {new Date(appt.appointment_date).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{appt.time_slot}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {appt.time_slot}
+                  </td>
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {appt.doctor_name ?? "—"}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {appt.total_amount ?? "0.00"}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span
@@ -144,12 +245,20 @@ const UserAppointments = () => {
                   </td>
                   <td className="px-6 py-4 text-sm space-x-2">
                     {appt.appointment_status === "Pending" && (
-                      <button
-                        onClick={() => openCancelModal(appt)}
-                        className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
-                      >
-                        Cancel
-                      </button>
+                      <>
+                        <button
+                          onClick={() => openCancelModal(appt)}
+                          className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={() => openPayModal(appt)}
+                          className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                          Pay Now
+                        </button>
+                      </>
                     )}
                     <button
                       onClick={() => openComplaintModal(appt)}

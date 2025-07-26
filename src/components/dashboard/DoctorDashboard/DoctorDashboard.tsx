@@ -4,16 +4,21 @@ import { motion } from "framer-motion";
 import DoctorDrawer from "./aside/DoctorDrawer";
 import Navbar from "../../navbar/Navbar";
 import Footer from "../../footer/Footer";
-import { FaPrescriptionBottleAlt, FaCalendarAlt, FaStethoscope, FaHeartbeat } from "react-icons/fa";
+import {
+  FaPrescriptionBottleAlt,
+  FaCalendarAlt,
+  FaStethoscope,
+  FaHeartbeat
+} from "react-icons/fa";
 import { RiCalendarEventFill, RiFlaskLine } from "react-icons/ri";
 import { WiDaySunny } from "react-icons/wi";
 
 const tips = [
-  "Always double-check a patient's allergies before prescribing medication.",
+  "Always double‑check a patient's allergies before prescribing medication.",
   "Take short breaks during long shifts to stay sharp.",
   "Good documentation helps your future self and your team.",
   "Clear communication with patients builds trust and better outcomes.",
-  "A quick mental reset can improve your focus for the next patient.",
+  "A quick mental reset can improve your focus for the next patient."
 ];
 
 const DoctorDashboard = () => {
@@ -44,13 +49,20 @@ const DoctorDashboard = () => {
   const overviewCards = [
     {
       icon: <RiCalendarEventFill className="text-purple-500 text-2xl" />,
-      value: currentTime.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }),
+      value: currentTime.toLocaleDateString(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric"
+      }),
       label: "Today's Date",
       bgColor: "bg-purple-50"
     },
     {
       icon: <FaPrescriptionBottleAlt className="text-green-500 text-2xl" />,
-      value: currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      value: currentTime.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      }),
       label: "Current Time",
       bgColor: "bg-green-50"
     },
@@ -73,6 +85,7 @@ const DoctorDashboard = () => {
       <Navbar />
 
       <div className="flex flex-1">
+        {/* Sidebar Drawer */}
         <aside
           className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform ${
             drawerOpen ? "translate-x-0" : "-translate-x-full"
@@ -90,14 +103,16 @@ const DoctorDashboard = () => {
 
         <main className="flex-1 p-6 lg:ml-64">
           {isDefaultRoute ? (
-            <div className="space-y-8">
+            <div className="space-y-6">
               {/* Welcome Banner */}
               <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
                 <div className="absolute right-6 top-6 opacity-20">
                   <FaHeartbeat className="text-white text-8xl" />
                 </div>
                 <div className="relative z-10">
-                  <h1 className="text-3xl font-bold mb-1">{greeting()}, Doctor!</h1>
+                  <h1 className="text-3xl font-bold mb-1">
+                    {greeting()}, Doctor!
+                  </h1>
                   <p className="text-blue-100 text-lg mb-4">
                     {currentTime.toLocaleDateString(undefined, {
                       weekday: "long",
@@ -119,7 +134,7 @@ const DoctorDashboard = () => {
                 </div>
               </div>
 
-              {/* Stats Cards */}
+              {/* Overview Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {overviewCards.map((card, index) => (
                   <motion.div
@@ -140,8 +155,8 @@ const DoctorDashboard = () => {
                 ))}
               </div>
 
-              {/* Tip of the day */}
-              <motion.div 
+              {/* Tip of the Day */}
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}

@@ -25,6 +25,7 @@ export type TAppointmentFull = {
   appointment_status: "Pending" | "Completed" | "Cancelled";
   created_at?: string;
   updated_at?: string;
+  
 
   
   doctor_id: number;
