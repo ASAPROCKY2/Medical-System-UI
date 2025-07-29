@@ -2,8 +2,8 @@
 import {
   FaChartLine,
   FaCalendarCheck,
- 
   FaPrescriptionBottleAlt,
+  FaUserCircle, // default icon for profile if image isn't used
 } from "react-icons/fa";
 
 export type DrawerData = {
@@ -13,8 +13,19 @@ export type DrawerData = {
   link: string;
 };
 
-// actual list of doctor drawer items
 export const doctorDrawerData: DrawerData[] = [
+
+{
+    id: "profile",
+    name: "My Profile",
+    icon: FaUserCircle, 
+    link: "/doctor/profile",
+  },
+
+
+
+
+
   {
     id: "dashboard",
     name: "Dashboard Overview",
@@ -27,12 +38,11 @@ export const doctorDrawerData: DrawerData[] = [
     icon: FaCalendarCheck,
     link: "/doctor/appointments",
   },
- 
   {
     id: "prescriptions",
     name: "My Prescriptions",
     icon: FaPrescriptionBottleAlt,
     link: "/doctor/prescriptions",
   },
- 
+  
 ];

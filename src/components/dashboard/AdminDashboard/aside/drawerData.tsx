@@ -1,4 +1,4 @@
-// src/dashboard/AdminDashboard/aside/drawerData.ts
+
 import {
   FaUserMd,
   FaUserInjured,
@@ -7,7 +7,8 @@ import {
   FaClipboardList,
   FaChartLine,
   FaPrescriptionBottleAlt,
-  FaChartBar, // ✅ added for Analytics
+  FaChartBar,
+  FaUser, 
 } from "react-icons/fa";
 
 export type DrawerData = {
@@ -18,6 +19,13 @@ export type DrawerData = {
 };
 
 export const adminDrawerData: DrawerData[] = [
+ 
+  {
+    id: "profile",
+    name: "My Profile",
+    icon: FaUser, 
+    link: "/admin/profile",
+  },
   {
     id: "dashboard",
     name: "Dashboard Overview",
@@ -60,8 +68,6 @@ export const adminDrawerData: DrawerData[] = [
     icon: FaPrescriptionBottleAlt,
     link: "/admin/prescriptions",
   },
- 
-  
   {
     id: "analytics",
     name: "Analytics",

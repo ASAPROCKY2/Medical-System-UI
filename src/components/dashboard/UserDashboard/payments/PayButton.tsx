@@ -3,7 +3,7 @@ import { useState } from "react";
 type PayButtonProps = {
   appointmentId: number;
   amount: number;
-  userId: number; // pass this from your auth context or parent component
+  userId: number;
 };
 
 export default function PayButton({ appointmentId, amount, userId }: PayButtonProps) {
@@ -45,11 +45,11 @@ export default function PayButton({ appointmentId, amount, userId }: PayButtonPr
   };
 
   return (
-    <div className="p-4 border rounded-md shadow-sm space-y-3 max-w-sm">
-      <p className="text-gray-700 font-medium">
-        Pay for Appointment #{appointmentId}
+    <div className="p-4 border border-blue-200 rounded-md shadow-sm space-y-3 max-w-sm bg-blue-50">
+      <p className="text-blue-900 font-semibold">
+        Pay Appointment
       </p>
-      <p className="text-gray-600">Amount: KES {amount}</p>
+      <p className="text-blue-800">Amount: KES {amount.toFixed(2)}</p>
 
       <input
         type="text"
@@ -62,12 +62,14 @@ export default function PayButton({ appointmentId, amount, userId }: PayButtonPr
       <button
         onClick={handlePay}
         disabled={loading}
-        className="btn btn-success w-full"
+        className="btn btn-primary w-full"
       >
         {loading ? "Processing…" : "Pay Now"}
       </button>
 
-      {message && <p className="text-sm mt-2">{message}</p>}
+      {message && (
+        <p className="text-sm mt-2 text-blue-800 whitespace-pre-line">{message}</p>
+      )}
     </div>
   );
 }

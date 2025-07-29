@@ -1,9 +1,12 @@
 // src/dashboard/AdminDashboard/aside/AdminDrawer.tsx
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { type RootState } from "../../../../app/store";
 import { adminDrawerData } from "./drawerData";
 
 const AdminDrawer = () => {
-  const location = useLocation(); // to highlight active link
+  const location = useLocation();
+  const authUser = useSelector((state: RootState) => state.user.user);
 
   return (
     <div className="h-full bg-gray-800 text-white flex flex-col">
@@ -11,7 +14,6 @@ const AdminDrawer = () => {
         Admin Menu
       </h2>
 
-      {/* Loops through each item in the adminDrawerData */}
       <ul className="flex-1">
         {adminDrawerData.map((item) => {
           const isActive = location.pathname === item.link;
@@ -26,7 +28,19 @@ const AdminDrawer = () => {
                     : "hover:bg-gray-700 hover:border-l-4 border-blue-400"
                 }`}
               >
-                <item.icon size={22} />
+                {item.id === "profile" ? (
+                  <img
+                    src={
+                      authUser?.image_url && authUser.image_url.trim() !== ""
+                        ? authUser.image_url
+                        : "/default-avatar.png"
+                    }
+                    alt="Profile"
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <item.icon size={22} />
+                )}
                 <span className="text-lg">{item.name}</span>
               </Link>
             </li>

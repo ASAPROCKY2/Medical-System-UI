@@ -1,11 +1,35 @@
 // src/components/dashboard/UserDashboard/appointments/CreateAppointment.tsx
-import { useState, useEffect } from "react";
+
+import { useState,  useMemo } from "react";
 import { toast } from "sonner";
 import { useCreateAppointmentMutation } from "../../../../Features/appointments/appointmentsAPI";
 
 type CreateAppointmentProps = {
   selectedDoctorId: number | null;
-  userId: number | null; 
+  userId: number | null;
+};
+
+// Hardcoded doctor info including specialization
+const doctorInfoMap: Record<number, { name: string; specialization: string }> = {
+  1: { name: "Dr. Michael Njoroge", specialization: "General Medicine" },
+  2: { name: "Dr. Grace Mwende", specialization: "Pediatrics" },
+  3: { name: "Dr. James Ouma", specialization: "Dermatology" },
+  4: { name: "Dr. Susan Kariuki", specialization: "Cardiology" },
+  5: { name: "Dr. Peter Mulei", specialization: "Orthopedics" },
+  6: { name: "Dr. Jack Rhan", specialization: "General Medicine" },
+  7: { name: "Dr. John Baraka", specialization: "Psychiatrist" },
+  8: { name: "Dr. Steve Harver", specialization: "Urologist" },
+};
+
+// Estimated fee by specialization
+const feeMap: Record<string, string> = {
+  "General Medicine": "1000",
+  Pediatrics: "1200",
+  Dermatology: "1300",
+  Cardiology: "2000",
+  Orthopedics: "1800",
+  Psychiatrist: "5",
+  Urologist: "5",
 };
 
 const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps) => {
@@ -13,14 +37,19 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
     fixedCacheKey: "createAppointment",
   });
 
-  const [formData, setFormData] = useState<{
-    appointment_date: string;
-    time_slot: string;
-  }>({
+  const [formData, setFormData] = useState({
     appointment_date: "",
     time_slot: "",
   });
 
+  const doctorSpecialization = useMemo(() => {
+    if (selectedDoctorId && doctorInfoMap[selectedDoctorId]) {
+      return doctorInfoMap[selectedDoctorId].specialization;
+    }
+    return null;
+  }, [selectedDoctorId]);
+
+  const estimatedFee = doctorSpecialization ? feeMap[doctorSpecialization] || "5" : null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,14 +60,11 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
   };
 
   const handleSubmit = async () => {
-    
-
     if (!userId || !selectedDoctorId) {
       toast.error("Missing user or doctor information.");
       return;
     }
 
-  
     if (!formData.appointment_date || !formData.time_slot) {
       toast.error("All fields are required.");
       return;
@@ -55,7 +81,6 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
       toast.success("Appointment created successfully!");
       (document.getElementById("book_appointment_modal") as HTMLDialogElement)?.close();
 
-      // reset date/time
       setFormData({
         appointment_date: "",
         time_slot: "",
@@ -78,7 +103,6 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
             handleSubmit();
           }}
         >
-          
           <input
             type="date"
             name="appointment_date"
@@ -97,6 +121,14 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
             className="input input-bordered text-black"
             required
           />
+
+          {doctorSpecialization && (
+            <div className="text-sm text-gray-200">
+              <strong>Specialization:</strong> {doctorSpecialization}
+              <br />
+              <strong>Total fee:</strong> KES {estimatedFee || "5"}
+            </div>
+          )}
 
           <div className="modal-action flex gap-4 mt-6">
             <button

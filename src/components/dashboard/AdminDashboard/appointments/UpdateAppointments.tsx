@@ -1,7 +1,10 @@
 // src/components/dashboard/AdminDashboard/appointments/UpdateAppointment.tsx
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { appointmentsAPI, type TAppointment } from "../../../../Features/appointments/appointmentsAPI";
+import {
+  appointmentsAPI,
+  type TAppointment,
+} from "../../../../Features/appointments/appointmentsAPI";
 
 type UpdateAppointmentProps = {
   appointment: TAppointment | null;
@@ -13,14 +16,14 @@ const UpdateAppointment = ({ appointment }: UpdateAppointmentProps) => {
       fixedCacheKey: "updateAppointment",
     });
 
-  // Ensure types match your DB
+  // Match your DB enum values: Pending | Confirmed | Cancelled
   const [formData, setFormData] = useState<{
     user_id: string;
     doctor_id: string;
     appointment_date: string;
     time_slot: string;
     total_amount: string;
-    appointment_status: "Pending" | "Completed" | "Cancelled";
+    appointment_status: "Pending" | "Confirmed" | "Cancelled";
   }>({
     user_id: "",
     doctor_id: "",
@@ -38,7 +41,11 @@ const UpdateAppointment = ({ appointment }: UpdateAppointmentProps) => {
         appointment_date: appointment.appointment_date.slice(0, 10),
         time_slot: appointment.time_slot,
         total_amount: appointment.total_amount?.toString() || "",
-        appointment_status: appointment.appointment_status,
+        // Ensure value maps to the valid enum
+        appointment_status: appointment.appointment_status as
+          | "Pending"
+          | "Confirmed"
+          | "Cancelled",
       });
     }
   }, [appointment]);
@@ -54,13 +61,12 @@ const UpdateAppointment = ({ appointment }: UpdateAppointmentProps) => {
   };
 
   const handleUpdate = async () => {
-    try {
-      if (!appointment) {
-        toast.error("No appointment selected for update.");
-        return;
-      }
+    if (!appointment) {
+      toast.error("No appointment selected for update.");
+      return;
+    }
 
-     
+    try {
       await updateAppointment({
         appointment_id: appointment.appointment_id,
         user_id: Number(formData.user_id),
@@ -69,7 +75,7 @@ const UpdateAppointment = ({ appointment }: UpdateAppointmentProps) => {
         time_slot: formData.time_slot,
         total_amount: formData.total_amount || undefined,
         appointment_status: formData.appointment_status,
-      });
+      }).unwrap();
 
       toast.success("Appointment updated successfully!");
       (
@@ -134,6 +140,7 @@ const UpdateAppointment = ({ appointment }: UpdateAppointmentProps) => {
             onChange={handleChange}
           />
 
+          {/* Updated to match your enum */}
           <select
             name="appointment_status"
             className="select select-bordered"
@@ -141,7 +148,7 @@ const UpdateAppointment = ({ appointment }: UpdateAppointmentProps) => {
             onChange={handleChange}
           >
             <option value="Pending">Pending</option>
-            <option value="Completed">Completed</option>
+            <option value="Confirmed">Confirmed</option>
             <option value="Cancelled">Cancelled</option>
           </select>
         </form>

@@ -13,7 +13,6 @@ type LoginInputs = {
   password: string;
 };
 
-
 const schema = yup.object({
   email: yup
     .string()
@@ -52,13 +51,13 @@ function Login() {
     try {
       const response = await loginUser(data).unwrap();
 
-     
       const mappedUser = {
         user_id: response.user.user_id,
-        firstname: response.user.firstname, 
-        lastname: response.user.lastname,   
+        firstname: response.user.firstname,
+        lastname: response.user.lastname,
         email: response.user.email,
         role: response.user.role,
+        image_url: response.user.image_url ?? '', // already present in your code
         doctor_id: response.user.doctor_id ?? null,
       };
 
@@ -71,7 +70,6 @@ function Login() {
 
       toast.success('Login successful!');
 
-      // Redirect based on role
       const role = response.user.role;
       if (role === 'admin') {
         navigate('/admin');
@@ -119,7 +117,7 @@ function Login() {
           </h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            {/* Email Field */}
+            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -144,7 +142,7 @@ function Login() {
               )}
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -166,7 +164,6 @@ function Login() {
               )}
             </div>
 
-            {/* Forgot Password */}
             <div className="flex justify-end">
               <a
                 href="/forgot-password"
@@ -176,7 +173,6 @@ function Login() {
               </a>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -212,14 +208,12 @@ function Login() {
             </button>
           </form>
 
-          {/* Divider */}
           <div className="flex items-center my-6">
             <div className="flex-grow border-t border-gray-300"></div>
             <span className="flex-shrink mx-4 text-gray-500">or</span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
 
-          {/* Links */}
           <div className="text-center space-y-3">
             <p className="text-gray-600">
               Don't have an account?{' '}

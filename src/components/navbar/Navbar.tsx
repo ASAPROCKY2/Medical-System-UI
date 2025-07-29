@@ -1,4 +1,3 @@
-// src/components/navbar/Navbar.tsx
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 
@@ -7,7 +6,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar bg-teal-600 text-white shadow-lg px-4 md:px-8 py-3">
-      {/* Left: Logo and Brand (navigation disabled) */}
+      {/* Left: Logo and Brand */}
       <div className="flex-1">
         <div className="flex items-center gap-3 cursor-default select-none">
           <img
@@ -28,8 +27,9 @@ const Navbar = () => {
           <li>
             <NavLink
               to="/"
+              data-testid="nav-home"
               className={({ isActive }) =>
-                `px-4 py-2 hover:bg-white/10 transition-colors ${
+                `px-4 py-2 hover:bg-white/10 rounded-md transition-colors ${
                   isActive ? activeStyle : ""
                 }`
               }
@@ -40,8 +40,9 @@ const Navbar = () => {
           <li>
             <NavLink
               to="/about"
+              data-testid="nav-about"
               className={({ isActive }) =>
-                `px-4 py-2 hover:bg-white/10 transition-colors ${
+                `px-4 py-2 hover:bg-white/10 rounded-md transition-colors ${
                   isActive ? activeStyle : ""
                 }`
               }
@@ -51,9 +52,10 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink
-              to="/"
+              to="/login"
+              data-testid="nav-dashboard"
               className={({ isActive }) =>
-                `px-4 py-2 hover:bg-white/10 transition-colors ${
+                `px-4 py-2 hover:bg-white/10 rounded-md transition-colors ${
                   isActive ? activeStyle : ""
                 }`
               }
@@ -64,56 +66,23 @@ const Navbar = () => {
         </ul>
       </div>
 
-      {/* Right: CTA Buttons and Profile */}
-      <div className="flex-none gap-4 hidden lg:flex items-center">
+      {/* Right: CTA Buttons */}
+      <div className="flex-none gap-3 hidden lg:flex items-center">
         <NavLink
           to="/login"
-          className="btn btn-ghost hover:bg-white/10 border-white/20"
+          data-testid="nav-login"
+          className="px-4 py-2 rounded-full border border-white/40 text-white hover:bg-white hover:text-teal-600 hover:shadow-md transition-all duration-200"
         >
           Login
         </NavLink>
+
         <NavLink
           to="/register"
-          className="btn bg-white text-teal-600 hover:bg-gray-100 font-bold"
+          data-testid="nav-register"
+          className="px-4 py-2 rounded-full bg-white text-teal-600 font-semibold hover:bg-gray-100 hover:shadow-md transition-all duration-200"
         >
           Register
         </NavLink>
-
-        {/* Profile Dropdown */}
-        <div className="dropdown dropdown-end">
-          <label
-            tabIndex={0}
-            className="btn btn-circle avatar border-2 border-white hover:scale-105 transition-transform"
-          >
-            <div className="w-10 rounded-full overflow-hidden">
-              <img
-                src="https://i.pravatar.cc/100"
-                alt="User Avatar"
-              />
-            </div>
-          </label>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-teal-700 text-white rounded-box w-52"
-          >
-            <li>
-              <NavLink to="/profile" className="hover:bg-white/10 rounded-md">
-                My Profile
-              </NavLink>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  console.log("Logging out...");
-                  // add logout logic here
-                }}
-                className="hover:bg-white/10 rounded-md text-left"
-              >
-                Logout
-              </button>
-            </li>
-          </ul>
-        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -140,17 +109,17 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-teal-700 rounded-box w-64"
           >
             <li>
-              <NavLink to="/" className="text-lg py-3">
+              <NavLink to="/" data-testid="mobile-nav-home" className="text-lg py-3">
                 Home
               </NavLink>
             </li>
             <li>
-              <NavLink to="/about" className="text-lg py-3">
+              <NavLink to="/about" data-testid="mobile-nav-about" className="text-lg py-3">
                 About
               </NavLink>
             </li>
             <li>
-              <NavLink to="/dashboard" className="text-lg py-3">
+              <NavLink to="/login" data-testid="mobile-nav-dashboard" className="text-lg py-3">
                 Dashboard
               </NavLink>
             </li>
@@ -158,7 +127,8 @@ const Navbar = () => {
             <li>
               <NavLink
                 to="/login"
-                className="bg-white/10 text-center font-medium py-3 mt-1"
+                data-testid="mobile-nav-login"
+                className="block rounded-full border border-white/30 text-center py-2 mt-2 hover:bg-white hover:text-teal-600 transition-all duration-200"
               >
                 Login
               </NavLink>
@@ -166,48 +136,11 @@ const Navbar = () => {
             <li>
               <NavLink
                 to="/register"
-                className="bg-white text-teal-600 text-center font-bold py-3"
+                data-testid="mobile-nav-register"
+                className="block rounded-full bg-white text-teal-600 text-center font-semibold py-2 mt-2 hover:bg-gray-100 transition-all duration-200"
               >
                 Register
               </NavLink>
-            </li>
-            <li>
-              <div className="mt-2 flex justify-center">
-                <div className="dropdown dropdown-top">
-                  <label
-                    tabIndex={0}
-                    className="btn btn-circle avatar border-2 border-white hover:scale-105 transition-transform"
-                  >
-                    <div className="w-10 rounded-full overflow-hidden">
-                      <img
-                        src="https://i.pravatar.cc/100"
-                        alt="User Avatar"
-                      />
-                    </div>
-                  </label>
-                  <ul
-                    tabIndex={0}
-                    className="menu menu-sm dropdown-content mb-3 z-[1] p-2 shadow bg-teal-700 text-white rounded-box w-52"
-                  >
-                    <li>
-                      <NavLink
-                        to="/profile"
-                        className="hover:bg-white/10 rounded-md"
-                      >
-                        My Profile
-                      </NavLink>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => console.log("Logging out...")}
-                        className="hover:bg-white/10 rounded-md text-left"
-                      >
-                        Logout
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </li>
           </ul>
         </div>

@@ -14,6 +14,7 @@ const CreatePrescription = ({ appointmentId, doctorId, patientId }: CreatePrescr
     fixedCacheKey: "createPrescription",
   });
 
+  // keep IDs in state but don't show them
   const [formData, setFormData] = useState({
     appointment_id: "",
     doctor_id: doctorId.toString(),
@@ -23,7 +24,7 @@ const CreatePrescription = ({ appointmentId, doctorId, patientId }: CreatePrescr
 
   useEffect(() => {
     if (appointmentId !== null) {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
         appointment_id: appointmentId.toString(),
       }));
@@ -32,18 +33,16 @@ const CreatePrescription = ({ appointmentId, doctorId, patientId }: CreatePrescr
 
   useEffect(() => {
     if (patientId !== null) {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
         patient_id: patientId.toString(),
       }));
     }
   }, [patientId]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,7 +54,7 @@ const CreatePrescription = ({ appointmentId, doctorId, patientId }: CreatePrescr
       !formData.patient_id ||
       !formData.notes
     ) {
-      toast.error("All fields are required.");
+      toast.error("Notes are required.");
       return;
     }
 
@@ -70,7 +69,6 @@ const CreatePrescription = ({ appointmentId, doctorId, patientId }: CreatePrescr
       toast.success("Prescription created successfully!");
       (document.getElementById("create_prescription_modal") as HTMLDialogElement)?.close();
 
-      // reset
       setFormData({
         appointment_id: "",
         doctor_id: doctorId.toString(),
@@ -88,36 +86,12 @@ const CreatePrescription = ({ appointmentId, doctorId, patientId }: CreatePrescr
       <div className="modal-box bg-gray-600 text-white w-full max-w-xs sm:max-w-lg mx-auto rounded-lg">
         <h3 className="font-bold text-lg mb-4">Create Prescription</h3>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
-            type="number"
-            name="appointment_id"
-            value={formData.appointment_id}
-            onChange={handleChange}
-            placeholder="Appointment ID"
-            className="input input-bordered text-black"
-            required
-          />
+          {/* Hidden ID fields */}
+          <input type="hidden" name="appointment_id" value={formData.appointment_id} />
+          <input type="hidden" name="doctor_id" value={formData.doctor_id} />
+          <input type="hidden" name="patient_id" value={formData.patient_id} />
 
-          <input
-            type="number"
-            name="doctor_id"
-            value={formData.doctor_id}
-            onChange={handleChange}
-            placeholder="Doctor ID"
-            className="input input-bordered text-black"
-            required
-          />
-
-          <input
-            type="number"
-            name="patient_id"
-            value={formData.patient_id}
-            onChange={handleChange}
-            placeholder="Patient ID"
-            className="input input-bordered text-black"
-            required
-          />
-
+          {/* Only visible field is notes */}
           <textarea
             name="notes"
             value={formData.notes}

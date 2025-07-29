@@ -1,3 +1,4 @@
+// src/dashboard/UserDashboard/payments/Payments.tsx
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../app/store";
 import {
@@ -8,11 +9,9 @@ import { FaClipboardList } from "react-icons/fa";
 import { Skeleton } from "../../../../components/ui/skeleton";
 
 const Payments = () => {
-  // get logged in user
   const { user } = useSelector((state: RootState) => state.user);
   const userId = user?.user_id;
 
-  // fetch all payments, then filter on client side if needed
   const {
     data: paymentsData,
     isLoading,
@@ -22,7 +21,6 @@ const Payments = () => {
     pollingInterval: 60000,
   });
 
-  // filter only this user's payments (if userId available)
   const userPayments = paymentsData?.filter((p) => p.user_id === userId) ?? [];
 
   if (!userId) {
@@ -74,12 +72,8 @@ const Payments = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Payment ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Appointment ID
-                </th>
+                {/* Removed Payment ID column */}
+                {/* Removed Appointment ID column */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Amount (KES)
                 </th>
@@ -100,12 +94,8 @@ const Payments = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {userPayments.map((payment: TPayment) => (
                 <tr key={payment.payment_id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    #{payment.payment_id}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {payment.appointment_id}
-                  </td>
+                  {/* Removed Payment ID cell */}
+                  {/* Removed Appointment ID cell */}
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {Number(payment.amount).toFixed(2)}
                   </td>

@@ -14,13 +14,24 @@ const Hero = () => {
 
       <div className="hero-content text-neutral-content text-center">
         <div className="max-w-2xl">
-          <h1 className="mb-6 text-4xl md:text-6xl font-bold">
+          {/* Refined welcome text */}
+          <p
+            className="mb-4 text-lg md:text-xl font-light uppercase tracking-widest text-green-200"
+            data-testid="welcome-text"
+          >
+            Welcome to
+          </p>
+
+          <h1 className="mb-6 text-4xl md:text-6xl font-bold leading-tight">
             Smarter Medical System Management
           </h1>
+
           <p className="mb-8 text-lg md:text-xl">
-            Streamline patient records, appointments, and staff coordination in one secure platform.  
-            Designed to help your team save time and focus on better care.
+            Streamline patient records, appointments, and staff coordination in
+            one secure platform. Designed to help your team save time and focus
+            on better care.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/login"

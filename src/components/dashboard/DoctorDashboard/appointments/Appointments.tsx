@@ -48,14 +48,12 @@ const DoctorAppointments = () => {
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm">
-      {/* Modal for creating a prescription */}
       <CreatePrescription
         appointmentId={selectedAppointment?.appointment_id ?? null}
         doctorId={doctorId}
         patientId={selectedAppointment?.user_id ?? null}
       />
 
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center">
           <FaClipboardList className="mr-2 text-blue-600" />
@@ -66,7 +64,6 @@ const DoctorAppointments = () => {
         </div>
       </div>
 
-      {/* Loading */}
       {isLoading && (
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
@@ -75,22 +72,18 @@ const DoctorAppointments = () => {
         </div>
       )}
 
-      {/* Error */}
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
           Error fetching appointments. Please try again.
         </div>
       )}
 
-      {/* Table */}
       {appointmentsData && appointmentsData.length > 0 ? (
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  ID
-                </th>
+                {/* Removed ID column */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Date
                 </th>
@@ -111,9 +104,7 @@ const DoctorAppointments = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {appointmentsData.map((appt) => (
                 <tr key={appt.appointment_id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    #{appt.appointment_id}
-                  </td>
+                  {/* Removed ID cell */}
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {new Date(appt.appointment_date).toLocaleDateString()}
                   </td>
@@ -126,7 +117,7 @@ const DoctorAppointments = () => {
                   <td className="px-6 py-4 text-sm">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        appt.appointment_status === "Completed"
+                        appt.appointment_status === "Confirmed"
                           ? "bg-green-100 text-green-800"
                           : appt.appointment_status === "Cancelled"
                           ? "bg-red-100 text-red-800"

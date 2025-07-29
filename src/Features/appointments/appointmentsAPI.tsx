@@ -11,7 +11,7 @@ export type TAppointment = {
   appointment_date: string;
   time_slot: string;
   total_amount: string | null;
-  appointment_status: "Pending" | "Completed" | "Cancelled";
+  appointment_status: "Pending" | "Confirmed" | "Cancelled";
   created_at?: string;
   updated_at?: string;
 };
@@ -22,7 +22,7 @@ export type TAppointmentFull = {
   appointment_date: string;
   time_slot: string;
   total_amount: string | null;
-  appointment_status: "Pending" | "Completed" | "Cancelled";
+  appointment_status: "Pending" | "Confirmed" | "Cancelled";
   created_at?: string;
   updated_at?: string;
   

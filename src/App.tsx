@@ -7,7 +7,7 @@ import VerifyUser from "./pages/auth/VerifyUser";
 import Login from "./pages/auth/Login";
 import Landingpage from "./pages/Landingpage";
 import AboutPage from "./pages/AboutPage";
-import Profile from "./components/dashboard/AdminDashboard/profile";
+import Profile from "./components/dashboard/UserDashboard/Profile";
 
 // ===== Admin dashboard and pages =====
 import AdminDashboard from "./components/dashboard/AdminDashboard/AdminDashboard";
@@ -18,11 +18,13 @@ import Prescriptions from "./components/dashboard/AdminDashboard/prescription/Pr
 import Patients from "./components/dashboard/AdminDashboard/patients/Patients";
 import Payments from "./components/dashboard/AdminDashboard/payments/Payments";
 import Analytics from "./components/dashboard/AdminDashboard/analytics/Analytics";
+import AdminProfile from "./components/dashboard/AdminDashboard/Adminprofile"; 
 
 // ===== Doctor dashboard and pages =====
 import DoctorDashboard from "./components/dashboard/DoctorDashboard/DoctorDashboard";
 import DoctorAppointments from "./components/dashboard/DoctorDashboard/appointments/Appointments";
 import DoctorPrescriptions from "./components/dashboard/DoctorDashboard/prescriptions/Prescriptions";
+import DoctorProfile from "./components/dashboard/DoctorDashboard/profile";
 
 // ===== User dashboard and pages =====
 import UserDashboard from "./components/dashboard/UserDashboard/UserDashboard";
@@ -30,7 +32,7 @@ import UserDoctors from "./components/dashboard/UserDashboard/doctor/Doctor";
 import UserAppointments from "./components/dashboard/UserDashboard/appointments/Appointments";
 import UserComplaints from "./components/dashboard/UserDashboard/complaints/Complaints";
 import UserPrescriptions from "./components/dashboard/UserDashboard/prescriptions/Prescriptions";
-import UserPayments from "./components/dashboard/UserDashboard/payments/Payments"; // ✅ NEW
+import UserPayments from "./components/dashboard/UserDashboard/payments/Payments";
 
 function App() {
   return (
@@ -54,11 +56,13 @@ function App() {
           <Route path="/admin/patients" element={<Patients />} />
           <Route path="/admin/payments" element={<Payments />} />
           <Route path="/admin/analytics" element={<Analytics />} />
+          <Route path="/admin/profile" element={<AdminProfile />} /> 
 
           {/* ===== DOCTOR ROUTES ===== */}
           <Route path="/doctor" element={<DoctorDashboard />} />
           <Route path="/doctor/appointments" element={<DoctorAppointments />} />
           <Route path="/doctor/prescriptions" element={<DoctorPrescriptions />} />
+          <Route path="/doctor/profile" element={<DoctorProfile />} />
 
           {/* ===== USER ROUTES ===== */}
           <Route path="/user" element={<UserDashboard />} />
@@ -67,7 +71,7 @@ function App() {
           <Route path="/user/appointments" element={<UserAppointments />} />
           <Route path="/user/complaints" element={<UserComplaints />} />
           <Route path="/user/prescriptions" element={<UserPrescriptions />} />
-          <Route path="/user/payments" element={<UserPayments />} /> 
+          <Route path="/user/payments" element={<UserPayments />} />
         </Routes>
       </BrowserRouter>
 

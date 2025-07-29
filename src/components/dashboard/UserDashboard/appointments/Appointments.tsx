@@ -1,3 +1,4 @@
+// src/dashboard/UserDashboard/appointments/UserAppointments.tsx
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../app/store";
 import { useState } from "react";
@@ -8,25 +9,20 @@ import {
 import { FaClipboardList } from "react-icons/fa";
 import { Skeleton } from "../../../../components/ui/skeleton";
 import CancelAppointment from "./DeleteAppointments";
-import CreateComplaint from "../appointments/CreateComplaint";
+import CreateComplaint from "./CreateComplaint";
 
-// ✅ backend base URL
 const API_BASE_URL = "http://localhost:8081";
 
 const UserAppointments = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const userId = user?.user_id;
 
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<TAppointmentFull | null>(null);
-
-  // Pay modal states
+  const [selectedAppointment, setSelectedAppointment] = useState<TAppointmentFull | null>(null);
   const [payAppointment, setPayAppointment] = useState<TAppointmentFull | null>(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [payLoading, setPayLoading] = useState(false);
   const [payMessage, setPayMessage] = useState("");
 
-  // fetch appointments for this user
   const {
     data: appointmentsData,
     isLoading,
@@ -37,19 +33,16 @@ const UserAppointments = () => {
     pollingInterval: 60000,
   });
 
-  // cancel modal
   const openCancelModal = (appt: TAppointmentFull) => {
     setSelectedAppointment(appt);
     (document.getElementById("cancel_appointment_modal") as HTMLDialogElement)?.showModal();
   };
 
-  // complaint modal
   const openComplaintModal = (appt: TAppointmentFull) => {
     setSelectedAppointment(appt);
     (document.getElementById("create_complaint_modal") as HTMLDialogElement)?.showModal();
   };
 
-  // pay modal
   const openPayModal = (appt: TAppointmentFull) => {
     setPayAppointment(appt);
     setPhoneNumber("");
@@ -57,16 +50,13 @@ const UserAppointments = () => {
     (document.getElementById("pay_modal") as HTMLDialogElement)?.showModal();
   };
 
-  // ✅ handle pay (fixed URL)
   const handlePay = async () => {
     if (!payAppointment || !phoneNumber.trim()) {
       setPayMessage("Please enter your M-Pesa phone number.");
       return;
     }
-
     setPayLoading(true);
     setPayMessage("");
-
     try {
       const res = await fetch(`${API_BASE_URL}/payments/initiate`, {
         method: "POST",
@@ -75,11 +65,11 @@ const UserAppointments = () => {
           appointment_id: payAppointment.appointment_id,
           user_id: userId,
           phoneNumber: phoneNumber.trim(),
-          amount: payAppointment.total_amount, // use total_amount directly
+          amount: payAppointment.total_amount,
         }),
       });
 
-      const text = await res.text(); // first get raw response
+      const text = await res.text();
       let data: any = {};
       try {
         data = text ? JSON.parse(text) : {};
@@ -88,9 +78,9 @@ const UserAppointments = () => {
       }
 
       if (!res.ok) throw new Error(data.error || "Failed to initiate payment.");
-      setPayMessage(`✅ ${data.CustomerMessage || "STK Push sent. Check your phone."}`);
+      setPayMessage(` ${data.CustomerMessage || "STK Push sent. Check your phone."}`);
     } catch (err: any) {
-      setPayMessage(`❌ ${err.message}`);
+      setPayMessage(` ${err.message}`);
     } finally {
       setPayLoading(false);
     }
@@ -112,7 +102,6 @@ const UserAppointments = () => {
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm">
-      {/* Modals */}
       <CancelAppointment appointment={selectedAppointment} />
       <CreateComplaint
         userId={userId}
@@ -120,13 +109,11 @@ const UserAppointments = () => {
         appointmentId={selectedAppointment?.appointment_id ?? 0}
       />
 
-      {/* Pay Modal */}
+      {/* Payment Modal with Pale Blue Theme */}
       <dialog id="pay_modal" className="modal">
-        <form method="dialog" className="modal-box space-y-4">
-          <h3 className="font-bold text-lg">
-            Pay Appointment #{payAppointment?.appointment_id}
-          </h3>
-          <p className="text-gray-600">
+        <form method="dialog" className="modal-box space-y-4 bg-blue-50 border border-blue-200 text-blue-900 rounded-md shadow">
+          <h3 className="font-bold text-lg">Pay Appointment</h3>
+          <p className="text-blue-800">
             Amount: KES {payAppointment?.total_amount ?? "0.00"}
           </p>
 
@@ -141,9 +128,7 @@ const UserAppointments = () => {
           {payMessage && <p className="text-sm">{payMessage}</p>}
 
           <div className="modal-action">
-            <button className="btn" disabled={payLoading}>
-              Close
-            </button>
+            <button className="btn" disabled={payLoading}>Close</button>
             <button
               type="button"
               className="btn btn-success"
@@ -156,7 +141,6 @@ const UserAppointments = () => {
         </form>
       </dialog>
 
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center">
           <FaClipboardList className="mr-2 text-blue-600" />
@@ -167,7 +151,6 @@ const UserAppointments = () => {
         </div>
       </div>
 
-      {/* Loading */}
       {isLoading && (
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
@@ -176,64 +159,38 @@ const UserAppointments = () => {
         </div>
       )}
 
-      {/* Error */}
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
           Error fetching appointments. Please try again.
         </div>
       )}
 
-      {/* Table */}
       {appointmentsData && appointmentsData.length > 0 ? (
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Time Slot
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Doctor
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Amount (KES)
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Actions
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time Slot</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Doctor</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount (KES)</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {appointmentsData.map((appt) => (
                 <tr key={appt.appointment_id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 text-sm text-gray-900">
-                    #{appt.appointment_id}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
                     {new Date(appt.appointment_date).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {appt.time_slot}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {appt.doctor_name ?? "—"}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {appt.total_amount ?? "0.00"}
-                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{appt.time_slot}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{appt.doctor_name ?? "—"}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{appt.total_amount ?? "0.00"}</td>
                   <td className="px-6 py-4 text-sm">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        appt.appointment_status === "Completed"
+                        appt.appointment_status === "Confirmed"
                           ? "bg-green-100 text-green-800"
                           : appt.appointment_status === "Cancelled"
                           ? "bg-red-100 text-red-800"

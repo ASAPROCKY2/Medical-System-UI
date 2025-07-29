@@ -1,3 +1,4 @@
+// src/dashboard/UserDashboard/prescriptions/UserPrescriptions.tsx
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../app/store";
 import {
@@ -8,11 +9,9 @@ import { FaClipboardList } from "react-icons/fa";
 import { Skeleton } from "../../../../components/ui/skeleton";
 
 const UserPrescriptions = () => {
-  // Get logged-in user
   const { user } = useSelector((state: RootState) => state.user);
   const userId = user?.user_id;
 
-  // Fetch prescriptions for this patient
   const {
     data: prescriptionsData,
     isLoading,
@@ -72,9 +71,7 @@ const UserPrescriptions = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Prescription ID
-                </th>
+                {/* Removed Prescription ID column */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Related Appointment
                 </th>
@@ -92,37 +89,24 @@ const UserPrescriptions = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {prescriptionsData.map((p: TPrescription) => (
                 <tr key={p.prescription_id} className="hover:bg-gray-50">
-                  {/* ID */}
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    #{p.prescription_id}
-                  </td>
-
-                  {/* Appointment info */}
+                  {/* Removed ID cell */}
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {p.appointment
                       ? `#${p.appointment.appointment_id} — ${
                           p.appointment.appointment_date
-                            ? new Date(
-                                p.appointment.appointment_date
-                              ).toLocaleDateString()
+                            ? new Date(p.appointment.appointment_date).toLocaleDateString()
                             : ""
                         }`
                       : "—"}
                   </td>
-
-                  {/* Doctor info */}
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {p.doctor
                       ? `Dr. ${p.doctor.first_name} ${p.doctor.last_name}`
                       : "—"}
                   </td>
-
-                  {/* Notes */}
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {p.notes || "—"}
                   </td>
-
-                  {/* Created date */}
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {p.created_at
                       ? new Date(p.created_at).toLocaleDateString()

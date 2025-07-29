@@ -1,12 +1,12 @@
+// src/dashboard/UserDashboard/aside/UserDrawer.tsx
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { type RootState } from "../../../../app/store";
 import { userDrawerData } from "./drawerData";
 
-type UserDrawerProps = {
-  userImageUrl?: string | null;
-};
-
-const UserDrawer = ({ userImageUrl }: UserDrawerProps) => {
+const UserDrawer = () => {
   const location = useLocation();
+  const authUser = useSelector((state: RootState) => state.user.user);
 
   return (
     <div className="h-full bg-gray-800 text-white flex flex-col">
@@ -28,11 +28,15 @@ const UserDrawer = ({ userImageUrl }: UserDrawerProps) => {
                     : "hover:bg-gray-700 hover:border-l-4 border-blue-400"
                 }`}
               >
-                {item.id === "profile" && userImageUrl ? (
+                {item.id === "profile" ? (
                   <img
-                    src={userImageUrl}
+                    src={
+                      authUser?.image_url && authUser.image_url.trim() !== ""
+                        ? authUser.image_url
+                        : "/default-avatar.png"
+                    }
                     alt="Profile"
-                    className="w-6 h-6 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
                   <item.icon size={22} />

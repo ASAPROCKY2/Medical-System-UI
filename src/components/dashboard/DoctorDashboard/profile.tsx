@@ -1,12 +1,12 @@
-// src/components/dashboard/AdminDashboard/Profile.tsx
+// src/components/dashboard/DoctorDashboard/DoctorProfile.tsx
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { type RootState } from "../../../app/store";
 import { logout } from "../../../Features/login/userSlice";
 import { usersAPI } from "../../../Features/users/userAPI";
-import UpdateProfile from "./ManageUsers/UpdateProfile";
+import UpdateProfile from "../../../components/dashboard/UserDashboard/ManageUsers/UpdateProfile";
 
-const Profile = () => {
+const DoctorProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -15,12 +15,7 @@ const Profile = () => {
   const userId = authUser?.user_id;
 
   // fetch the full profile from API
-  const {
-    data,
-    isLoading,
-    error,
-    refetch,
-  } = usersAPI.useGetUserByIdQuery(userId ?? 0, {
+  const { data, isLoading, error, refetch } = usersAPI.useGetUserByIdQuery(userId ?? 0, {
     skip: !userId,
   });
 
@@ -34,7 +29,7 @@ const Profile = () => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md min-h-screen">
-      <h2 className="text-xl font-semibold mb-4">User Information</h2>
+      <h2 className="text-xl font-semibold mb-4">My Profile</h2>
 
       {/* Profile Card */}
       <div className="flex flex-col items-center mb-6 gap-4 border border-gray-300 p-4 rounded">
@@ -44,7 +39,7 @@ const Profile = () => {
               ? data.image_url
               : "/default-avatar.png"
           }
-          alt="User Avatar"
+          alt="Doctor Avatar"
           className="w-40 h-40 object-cover rounded-full border-2 border-gray-400"
         />
 
@@ -67,9 +62,7 @@ const Profile = () => {
           className="btn btn-primary"
           onClick={() => {
             (
-              document.getElementById(
-                "update_profile_modal"
-              ) as HTMLDialogElement
+              document.getElementById("update_profile_modal") as HTMLDialogElement
             )?.showModal();
           }}
         >
@@ -93,4 +86,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default DoctorProfile;

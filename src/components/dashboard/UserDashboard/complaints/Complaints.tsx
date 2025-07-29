@@ -1,3 +1,4 @@
+// src/dashboard/UserDashboard/complaints/Complaints.tsx
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../app/store";
 import {
@@ -8,11 +9,9 @@ import { FaClipboardList } from "react-icons/fa";
 import { Skeleton } from "../../../../components/ui/skeleton";
 
 const Complaints = () => {
-  // get logged in user
   const { user } = useSelector((state: RootState) => state.user);
   const userId = user?.user_id;
 
-  // fetch complaints for this user
   const {
     data: complaintsData,
     isLoading,
@@ -72,9 +71,7 @@ const Complaints = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Complaint ID
-                </th>
+                {/* Removed Complaint ID header */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Doctor
                 </th>
@@ -92,9 +89,7 @@ const Complaints = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {complaintsData.map((complaint: TComplaint) => (
                 <tr key={complaint.complaint_id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    #{complaint.complaint_id}
-                  </td>
+                  {/* Removed Complaint ID cell */}
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {complaint.doctor_name ?? "—"}
                   </td>

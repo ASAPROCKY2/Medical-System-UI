@@ -17,6 +17,17 @@ export type DrawerData = {
 
 
 export const userDrawerData: DrawerData[] = [
+
+ {
+    id: "profile",
+    name: "My Profile",
+    icon: FaUserCircle,
+    link: "/user/profile",
+  },
+
+
+
+
   {
     id: "dashboard",
     name: "Dashboard Overview",
@@ -53,10 +64,5 @@ export const userDrawerData: DrawerData[] = [
     icon: FaUserMd,          
     link: "/user/doctors",  
   },
-  {
-    id: "profile",
-    name: "My Profile",
-    icon: FaUserCircle,
-    link: "/user/profile",
-  },
+ 
 ];

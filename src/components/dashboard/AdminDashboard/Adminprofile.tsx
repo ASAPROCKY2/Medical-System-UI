@@ -1,54 +1,49 @@
-// src/components/dashboard/AdminDashboard/Profile.tsx
-import { type RootState } from "../../../app/store";
+// src/components/dashboard/AdminDashboard/AdminProfile.tsx
 import { useDispatch, useSelector } from "react-redux";
-import { usersAPI } from "../../../Features/users/userAPI";
 import { useNavigate } from "react-router-dom";
+import { type RootState } from "../../../app/store";
 import { logout } from "../../../Features/login/userSlice";
-import UpdateProfile from "./manageAdmins/UpdateProfile";
+import { usersAPI } from "../../../Features/users/userAPI";
+import UpdateProfile from "../../../components/dashboard/UserDashboard/ManageUsers/UpdateProfile";
 
-const Profile = () => {
+const AdminProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
-
+  // get the logged-in admin user from redux
   const authUser = useSelector((state: RootState) => state.user.user);
-
-
   const userId = authUser?.user_id;
 
-
+  // fetch the full profile from API
   const { data, isLoading, error, refetch } = usersAPI.useGetUserByIdQuery(userId ?? 0, {
     skip: !userId,
   });
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p className="p-4 text-gray-600">Loading...</p>;
   }
 
   if (error) {
-    return <p>Error loading profile</p>;
+    return <p className="p-4 text-red-600">Error loading profile.</p>;
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md h-screen">
-      <h2 className="text-xl font-semibold mb-4">User Information</h2>
+    <div className="bg-white p-6 rounded-lg shadow-md min-h-screen">
+      <h2 className="text-xl font-semibold mb-4">Admin Profile</h2>
 
-      <div className="flex flex-col items-center mb-4 gap-4 border border-gray-300 p-4 rounded">
+      {/* Profile Card */}
+      <div className="flex flex-col items-center mb-6 gap-4 border border-gray-300 p-4 rounded">
         <img
           src={
             data?.image_url && data.image_url.trim() !== ""
               ? data.image_url
               : "/default-avatar.png"
           }
-          alt="User Avatar"
-          className="w-40 h-40 object-cover rounded-full mr-4 border-2 border-gray-400"
+          alt="Admin Avatar"
+          className="w-40 h-40 object-cover rounded-full border-2 border-gray-400"
         />
 
         <div className="text-center">
-        
-
-
           <h3 className="text-lg font-bold">
             Name: {data?.firstName} {data?.lastName}
           </h3>
@@ -61,14 +56,13 @@ const Profile = () => {
         </div>
       </div>
 
+      {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-2 justify-center">
         <button
-          className="btn btn-primary flex mx-auto"
+          className="btn btn-primary"
           onClick={() => {
             (
-              document.getElementById(
-                "update_profile_modal"
-              ) as HTMLDialogElement
+              document.getElementById("update_profile_modal") as HTMLDialogElement
             )?.showModal();
           }}
         >
@@ -76,7 +70,7 @@ const Profile = () => {
         </button>
 
         <button
-          className="btn btn-error flex mx-auto"
+          className="btn btn-error"
           onClick={() => {
             dispatch(logout());
             navigate("/");
@@ -86,9 +80,10 @@ const Profile = () => {
         </button>
       </div>
 
+      {/* Modal for update */}
       {data && <UpdateProfile user={data} refetch={refetch} />}
     </div>
   );
 };
 
-export default Profile;
+export default AdminProfile;

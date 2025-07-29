@@ -6,18 +6,16 @@ import {
   prescriptionsAPI,
   type TPrescription,
 } from "../../../../Features/prescriptions/prescriptionsAPI";
-import { FaEdit, FaClipboardList, FaUserMd } from "react-icons/fa";
+import { FaEdit, FaClipboardList } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import UpdatePrescription from "./UpdatePrescriptions";
 import DeletePrescription from "./DeletePrescriptions";
 import { Skeleton } from "../../../../components/ui/skeleton";
 
 const Prescriptions = () => {
-  // Get logged-in doctor from Redux store
   const { user } = useSelector((state: RootState) => state.user);
   const doctorId = user?.doctor_id;
 
-  // Fetch prescriptions for this doctor
   const {
     data: prescriptionsData,
     isLoading,
@@ -28,7 +26,6 @@ const Prescriptions = () => {
     pollingInterval: 60000,
   });
 
-  // State for modals
   const [selectedPrescription, setSelectedPrescription] =
     useState<TPrescription | null>(null);
   const [prescriptionToDelete, setPrescriptionToDelete] =
@@ -57,11 +54,9 @@ const Prescriptions = () => {
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm">
-      {/* Modals */}
       <UpdatePrescription prescription={selectedPrescription} />
       <DeletePrescription prescription={prescriptionToDelete} />
 
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center">
           <FaClipboardList className="mr-2 text-blue-600" />
@@ -72,7 +67,6 @@ const Prescriptions = () => {
         </div>
       </div>
 
-      {/* Loading */}
       {isLoading && (
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
@@ -81,31 +75,20 @@ const Prescriptions = () => {
         </div>
       )}
 
-      {/* Error */}
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
           Error fetching prescriptions. Please try again.
         </div>
       )}
 
-      {/* Table */}
       {prescriptionsData && prescriptionsData.length > 0 ? (
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Prescription ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Appointment ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  <div className="flex items-center">
-                    <FaUserMd className="mr-2" />
-                    Doctor
-                  </div>
-                </th>
+                {/* Removed Prescription ID */}
+                {/* Removed Appointment ID */}
+                {/* Removed Doctor */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Patient
                 </th>
@@ -126,17 +109,10 @@ const Prescriptions = () => {
                   key={prescription.prescription_id}
                   className="hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    #{prescription.prescription_id}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {prescription.appointment_id}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {prescription.doctor
-                      ? `Dr. ${prescription.doctor.first_name} ${prescription.doctor.last_name}`
-                      : "—"}
-                  </td>
+                  {/* Removed Prescription ID cell */}
+                  {/* Removed Appointment ID cell */}
+                  {/* Removed Doctor cell */}
+
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {prescription.patient
                       ? `${prescription.patient.firstname} ${prescription.patient.lastname}`

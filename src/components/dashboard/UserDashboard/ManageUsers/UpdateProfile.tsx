@@ -75,13 +75,12 @@ const UpdateProfile = ({ user, refetch }: UpdateProfileProps) => {
 
   const onSubmit: SubmitHandler<UpdateProfileInputs> = async (data) => {
     try {
-      // set default image_url
+      // keep current image unless a new one is uploaded
       let image_url =
-        user.image_url && user.image_url.trim() !== ""
+        user?.image_url && user.image_url.trim() !== ""
           ? user.image_url
-          : "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+          : undefined;
 
-      // if a new image is uploaded, replace the default
       if (image) {
         setIsUploading(true);
         const formData = new FormData();
@@ -102,16 +101,20 @@ const UpdateProfile = ({ user, refetch }: UpdateProfileProps) => {
         }
       }
 
-      const payload = {
+      const payload: any = {
         id: Number(user.id),
         firstName: data.firstName,
         lastName: data.lastName,
-        image_url, // always include an image URL
       };
 
-      await updateUser(payload).unwrap();
+      // only include image_url if we have one
+      if (image_url) {
+        payload.image_url = image_url;
+      }
 
+      await updateUser(payload).unwrap();
       toast.success("Profile updated successfully!");
+
       if (refetch) refetch();
       reset();
       (document.getElementById("update_profile_modal") as HTMLDialogElement)?.close();
@@ -147,7 +150,7 @@ const UpdateProfile = ({ user, refetch }: UpdateProfileProps) => {
             <span className="text-sm text-red-700">{errors.lastName.message}</span>
           )}
 
-          {/* no image_url input */}
+          {/* image upload only, no manual URL */}
           <div className="flex flex-col gap-2">
             <label className="text-sm text-gray-300">Upload Image</label>
             <input
