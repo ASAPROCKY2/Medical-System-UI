@@ -96,7 +96,7 @@ const About = () => {
         </motion.div>
       </div>
 
-      {/* Testimonials Section */}
+     
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

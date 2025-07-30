@@ -9,7 +9,7 @@ type CreateAppointmentProps = {
   userId: number | null;
 };
 
-// Hardcoded doctor info including specialization
+
 const doctorInfoMap: Record<number, { name: string; specialization: string }> = {
   1: { name: "Dr. Michael Njoroge", specialization: "General Medicine" },
   2: { name: "Dr. Grace Mwende", specialization: "Pediatrics" },
@@ -21,7 +21,7 @@ const doctorInfoMap: Record<number, { name: string; specialization: string }> = 
   8: { name: "Dr. Steve Harver", specialization: "Urologist" },
 };
 
-// Estimated fee by specialization
+
 const feeMap: Record<string, string> = {
   "General Medicine": "1000",
   Pediatrics: "1200",

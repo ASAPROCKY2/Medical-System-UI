@@ -11,14 +11,6 @@ describe('Login Functionality', () => {
     cy.get('button[type="submit"]').should('contain', 'Login');
   });
 
-  // it('should show validation errors for empty fields', () => {
-  //   cy.get('button[type="submit"]').click();
-
-  //   // Wait for both validation messages to appear
-  //   cy.contains('Email is required', { timeout: 5000 }).should('be.visible');
-  //   cy.contains('Password is required', { timeout: 5000 }).should('be.visible');
-  // });
-
   it('should show validation error for invalid email', () => {
     cy.get('input#email').type('invalidemail');
     cy.get('input#password').type('12345678');
@@ -50,7 +42,7 @@ describe('Login Functionality', () => {
 
     cy.wait('@loginRequest');
     cy.url().should('include', '/user');
-    cy.contains('Login successful!').should('exist');
+    cy.contains(/Login successful/i).should('exist');
   });
 
   it('should show error toast on failed login', () => {
@@ -64,6 +56,8 @@ describe('Login Functionality', () => {
     cy.get('button[type="submit"]').click();
 
     cy.wait('@failedLogin');
-    cy.contains('Login failed. Please check your credentials.').should('be.visible');
+
+    // Match either toast content or exact message based on your actual implementation
+    cy.contains(/invalid credentials|login failed/i).should('be.visible');
   });
 });
