@@ -5,7 +5,7 @@ import {
   FaUserMd,
   FaPhone,
   FaStethoscope,
-  FaUserTie,
+  
   FaIdCard,
   FaCalendarAlt,
 } from "react-icons/fa";
@@ -140,7 +140,7 @@ const UserDoctors = () => {
                   </div>
                 </div>
 
-                {/* ✅ Show Available Days */}
+                {/*  Show Available Days */}
                 <div className="flex items-start">
                   <FaCalendarAlt className="text-gray-400 mt-1 mr-3 flex-shrink-0" />
                   <div>

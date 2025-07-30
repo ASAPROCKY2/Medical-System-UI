@@ -14,7 +14,7 @@ const CreateAppointment = () => {
     appointment_date: string;
     time_slot: string;
     total_amount: string;
-    appointment_status: "Pending" | "Completed" | "Cancelled";
+    appointment_status: "Pending" | "Confirmed" | "Cancelled";
   }>({
     user_id: "",
     doctor_id: "",
@@ -32,7 +32,7 @@ const CreateAppointment = () => {
       ...prev,
       [name]:
         name === "appointment_status"
-          ? (value as "Pending" | "Completed" | "Cancelled")
+          ? (value as "Pending" | "Confirmed" | "Cancelled")
           : value,
     }));
   };

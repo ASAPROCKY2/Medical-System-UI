@@ -20,7 +20,7 @@ const UpdateAppointment = ({ appointment }: UpdateAppointmentProps) => {
   const [formData, setFormData] = useState<{
     appointment_date: string;
     time_slot: string;
-    appointment_status: "Pending" | "Completed" | "Cancelled";
+    appointment_status: "Pending" | "Confirmed" | "Cancelled";
     total_amount: string;
   }>({
     appointment_date: "",
@@ -108,7 +108,7 @@ const UpdateAppointment = ({ appointment }: UpdateAppointmentProps) => {
             onChange={handleChange}
           >
             <option value="Pending">Pending</option>
-            <option value="Completed">Completed</option>
+            <option value="Confirmed">Confirmed</option>
             <option value="Cancelled">Cancelled</option>
           </select>
 
