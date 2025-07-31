@@ -42,7 +42,7 @@ const UserDashboard = () => {
         return;
       }
       try {
-        const res = await fetch("http://localhost:8081/user/dashboard-stats", {
+        const res = await fetch("https://hospital-management-mdbf.onrender.com/user/dashboard-stats", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
