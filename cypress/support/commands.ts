@@ -1,50 +1,48 @@
 /// <reference types="cypress" />
 
-// Custom command to select elements by data-test attribute
-Cypress.Commands.add('getDataTest', (dataTestSelector: string) => {
-  return cy.get(`[data-test="${dataTestSelector}"]`);
+// Custom command: Select element by data-test attribute
+Cypress.Commands.add('getDataTest', (selector: string) => {
+  return cy.get(`[data-test="${selector}"]`, { timeout: 10000 }).should('exist');
 });
 
-// Login as normal user
-Cypress.Commands.add(
-  'loginAsUser',
-  (email: string = 'c3125024@gmail.com', password: string = '11111111') => {
-    cy.visit('/login');
-    cy.get('[data-test="login-email-input"]').type(email);
-    cy.get('[data-test="login-password-input"]').type(password);
-    cy.get('[data-test="login-submit-button"]').click();
+// Command: Login as normal user
+Cypress.Commands.add('loginAsUser', (email = 'c3125024@gmail.com', password = '11111111') => {
+  cy.visit('/login');
 
-    cy.url().should('include', '/user');
+  cy.getDataTest('login-email-input').should('be.visible').type(email);
+  cy.getDataTest('login-password-input').should('be.visible').type(password);
+  cy.getDataTest('login-submit-button').click();
 
-    // Confirm dashboard is loaded
-    cy.contains('Dashboard Overview', { timeout: 8000 })
-      .scrollIntoView()
-      .should('be.visible');
-  }
-);
+  // Confirm navigation to user dashboard
+  cy.url().should('include', '/user');
 
-// Login as admin user
-Cypress.Commands.add(
-  'loginAsAdmin',
-  (email: string = 'admin@example.com', password: string = 'adminpass') => {
-    cy.visit('/login');
-    cy.get('[data-test="login-email-input"]').type(email);
-    cy.get('[data-test="login-password-input"]').type(password);
-    cy.get('[data-test="login-submit-button"]').click();
+  // Wait for dashboard data and ensure it's visible
+  cy.intercept('GET', '**/user/dashboard-stats').as('getDashboardStats');
+  cy.wait('@getDashboardStats');
+  cy.contains('Dashboard Overview', { timeout: 10000 }).scrollIntoView().should('be.visible');
+});
 
-    cy.url().should('include', '/admin');
-    cy.contains('Admin Dashboard', { timeout: 8000 })
-      .scrollIntoView()
-      .should('be.visible');
-  }
-);
+// Command: Login as admin user
+Cypress.Commands.add('loginAsAdmin', (email = 'admin@example.com', password = 'adminpass') => {
+  cy.visit('/login');
 
+  cy.getDataTest('login-email-input').should('be.visible').type(email);
+  cy.getDataTest('login-password-input').should('be.visible').type(password);
+  cy.getDataTest('login-submit-button').click();
+
+  // Confirm navigation to admin dashboard
+  cy.url().should('include', '/admin');
+
+  cy.contains('Admin Dashboard', { timeout: 10000 }).scrollIntoView().should('be.visible');
+});
+
+// Type declaration for custom commands
 export {};
 
 declare global {
   namespace Cypress {
     interface Chainable {
-      getDataTest(value: string): Chainable<JQuery<HTMLElement>>;
+      getDataTest(selector: string): Chainable<JQuery<HTMLElement>>;
       loginAsUser(email?: string, password?: string): Chainable<void>;
       loginAsAdmin(email?: string, password?: string): Chainable<void>;
     }

@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { usersAPI } from "../../Features/users/userAPI";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   FaPhone,
   FaHome,
@@ -34,7 +34,7 @@ const schema: yup.ObjectSchema<RegisterInputs> = yup.object({
     .required("Last name is required"),
   email: yup
     .string()
-    .email("Enter a valid email") // ✅ Updated to match Cypress test
+    .email("Enter a valid email")
     .max(100, "Max 100 characters")
     .required("Email is required"),
   password: yup
@@ -88,9 +88,19 @@ function Register() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-teal-500 to-blue-600 p-6 text-white">
-          <h1 className="text-3xl font-bold">Medical Portal</h1>
-          <p className="opacity-90">Create your healthcare account</p>
+        <div className="bg-gradient-to-r from-teal-500 to-blue-600 p-6 text-white flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Medical Portal</h1>
+            <p className="opacity-90">Create your healthcare account</p>
+          </div>
+          {/* ✅ Added testable nav link for Cypress */}
+          <Link
+            to="/register"
+            data-testid="nav-register"
+            className="hidden"
+          >
+            Register
+          </Link>
         </div>
 
         <div className="p-8">

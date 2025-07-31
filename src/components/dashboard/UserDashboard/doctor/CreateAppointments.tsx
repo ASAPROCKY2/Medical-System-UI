@@ -1,6 +1,4 @@
-// src/components/dashboard/UserDashboard/appointments/CreateAppointment.tsx
-
-import { useState,  useMemo } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { useCreateAppointmentMutation } from "../../../../Features/appointments/appointmentsAPI";
 
@@ -8,7 +6,6 @@ type CreateAppointmentProps = {
   selectedDoctorId: number | null;
   userId: number | null;
 };
-
 
 const doctorInfoMap: Record<number, { name: string; specialization: string }> = {
   1: { name: "Dr. Michael Njoroge", specialization: "General Medicine" },
@@ -20,7 +17,6 @@ const doctorInfoMap: Record<number, { name: string; specialization: string }> = 
   7: { name: "Dr. John Baraka", specialization: "Psychiatrist" },
   8: { name: "Dr. Steve Harver", specialization: "Urologist" },
 };
-
 
 const feeMap: Record<string, string> = {
   "General Medicine": "1000",
@@ -39,7 +35,8 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
 
   const [formData, setFormData] = useState({
     appointment_date: "",
-    time_slot: "",
+    start_time: "",
+    end_time: "",
   });
 
   const doctorSpecialization = useMemo(() => {
@@ -65,17 +62,19 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
       return;
     }
 
-    if (!formData.appointment_date || !formData.time_slot) {
+    if (!formData.appointment_date || !formData.start_time || !formData.end_time) {
       toast.error("All fields are required.");
       return;
     }
+
+    const timeSlot = `${formData.start_time} - ${formData.end_time}`;
 
     try {
       await createAppointment({
         user_id: userId,
         doctor_id: selectedDoctorId,
         appointment_date: formData.appointment_date,
-        time_slot: formData.time_slot,
+        time_slot: timeSlot,
       }).unwrap();
 
       toast.success("Appointment created successfully!");
@@ -83,7 +82,8 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
 
       setFormData({
         appointment_date: "",
-        time_slot: "",
+        start_time: "",
+        end_time: "",
       });
     } catch (err) {
       console.error("Error creating appointment:", err);
@@ -112,15 +112,30 @@ const CreateAppointment = ({ selectedDoctorId, userId }: CreateAppointmentProps)
             required
           />
 
-          <input
-            type="text"
-            name="time_slot"
-            value={formData.time_slot}
-            onChange={handleChange}
-            placeholder="Time Slot (e.g. 10:00 AM - 11:00 AM)"
-            className="input input-bordered text-black"
-            required
-          />
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <label className="text-sm block mb-1">Start Time</label>
+              <input
+                type="time"
+                name="start_time"
+                value={formData.start_time}
+                onChange={handleChange}
+                className="input input-bordered text-black w-full"
+                required
+              />
+            </div>
+            <div className="flex-1">
+              <label className="text-sm block mb-1">End Time</label>
+              <input
+                type="time"
+                name="end_time"
+                value={formData.end_time}
+                onChange={handleChange}
+                className="input input-bordered text-black w-full"
+                required
+              />
+            </div>
+          </div>
 
           {doctorSpecialization && (
             <div className="text-sm text-gray-200">
