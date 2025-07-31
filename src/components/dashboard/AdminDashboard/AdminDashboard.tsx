@@ -34,7 +34,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:8081/admin/dashboard-stats");
+        const res = await fetch("https://hospital-management-mdbf.onrender.com/dashboard-stats");
         if (!res.ok) throw new Error("Failed to fetch stats");
         const data = await res.json();
         setStatsData(data);
