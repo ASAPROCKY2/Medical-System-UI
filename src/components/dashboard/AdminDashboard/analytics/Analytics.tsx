@@ -48,11 +48,11 @@ const Analytics = () => {
     const fetchAnalytics = async () => {
       try {
         const responses = await Promise.all([
-          fetch("http://localhost:8081/admin/analytics/appointments-per-day"),
-          fetch("http://localhost:8081/admin/analytics/patients-per-month"),
-          fetch("http://localhost:8081/admin/analytics/doctors-per-month"),
-          fetch("http://localhost:8081/admin/analytics/payments-per-month"),
-          fetch("http://localhost:8081/admin/analytics/complaints-per-month"),
+          fetch("https://hospital-management-mdbf.onrender.com/admin/analytics/appointments-per-day"),
+          fetch("https://hospital-management-mdbf.onrender.com/admin/analytics/patients-per-month"),
+          fetch("https://hospital-management-mdbf.onrender.com/admin/analytics/doctors-per-month"),
+          fetch("https://hospital-management-mdbf.onrender.com/admin/analytics/payments-per-month"),
+          fetch("https://hospital-management-mdbf.onrender.com/admin/analytics/complaints-per-month"),
         ]);
 
         if (responses.some((res) => !res.ok)) {
