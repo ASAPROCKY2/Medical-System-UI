@@ -3,10 +3,10 @@
 describe("Multi-page navigation via Navbar", () => {
   beforeEach(() => {
     cy.visit("/");
-    cy.viewport(1280, 720); // Desktop viewport
+    cy.viewport(1280, 720);
   });
 
-  it("should navigate through Home, About, Dashboard, Login, and Register pages", () => {
+  it("should navigate through Home, About, Dashboard (unauthenticated), Login, and Register pages", () => {
     // Home
     cy.location("pathname").should("eq", "/");
     cy.get('[data-testid="nav-home"]').should("be.visible");
@@ -16,10 +16,10 @@ describe("Multi-page navigation via Navbar", () => {
     cy.location("pathname").should("eq", "/about");
     cy.contains(/About/i).should("be.visible");
 
-    // Dashboard
+    // Dashboard (should redirect to login)
     cy.get('[data-testid="nav-dashboard"]').click();
-    cy.location("pathname").should("eq", "/dashboard");
-    cy.contains(/Dashboard/i).should("be.visible");
+    cy.location("pathname").should("eq", "/login"); // expect redirect
+    cy.contains(/Login/i).should("be.visible");
 
     // Login
     cy.get('[data-testid="nav-login"]').click();

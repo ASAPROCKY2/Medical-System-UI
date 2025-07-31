@@ -1,4 +1,3 @@
-// src/pages/auth/Login.tsx
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -45,7 +44,7 @@ function Login() {
       email: emailFromState,
       password: '',
     },
-    mode: 'onChange', // ✅ Changed from 'onSubmit'
+    mode: 'onChange',
   });
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
@@ -126,6 +125,7 @@ function Login() {
               <input
                 id="email"
                 data-testid="email-input"
+                data-test="login-email-input" 
                 type="email"
                 {...register('email')}
                 placeholder="user@example.com"
@@ -157,6 +157,7 @@ function Login() {
               <input
                 id="password"
                 data-testid="password-input"
+                data-test="login-password-input" 
                 type="password"
                 {...register('password')}
                 placeholder="••••••••"
@@ -185,6 +186,7 @@ function Login() {
 
             <button
               type="submit"
+              data-test="login-submit-button" 
               disabled={isLoading}
               className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center"
             >

@@ -89,7 +89,10 @@ const UserAppointments = () => {
   if (!userId) {
     return (
       <div className="p-6 bg-white rounded-xl shadow-sm">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+        <h2
+          className="text-2xl font-bold text-gray-800 mb-4 flex items-center"
+          data-test="appointments-heading"
+        >
           <FaClipboardList className="mr-2 text-blue-600" />
           My Appointments
         </h2>
@@ -142,7 +145,10 @@ const UserAppointments = () => {
       </dialog>
 
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+        <h2
+          className="text-2xl font-bold text-gray-800 flex items-center"
+          data-test="appointments-heading"
+        >
           <FaClipboardList className="mr-2 text-blue-600" />
           My Appointments
         </h2>
