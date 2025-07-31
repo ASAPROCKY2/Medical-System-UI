@@ -1,6 +1,6 @@
 export const getDashboardStats = async () => {
   try {
-    const response = await fetch("http://localhost:8081/admin/dashboard-stats", {
+    const response = await fetch("https://hospital-management-mdbf.onrender.com/admin/dashboard-stats", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

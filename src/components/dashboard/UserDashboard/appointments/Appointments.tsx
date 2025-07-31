@@ -11,7 +11,7 @@ import { Skeleton } from "../../../../components/ui/skeleton";
 import CancelAppointment from "./DeleteAppointments";
 import CreateComplaint from "./CreateComplaint";
 
-const API_BASE_URL = "http://localhost:8081";
+const API_BASE_URL = "https://hospital-management-mdbf.onrender.com";
 
 const UserAppointments = () => {
   const { user } = useSelector((state: RootState) => state.user);
